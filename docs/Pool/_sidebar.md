@@ -1,3 +1,5 @@
 * [Apache Commons](/)
 * [README](Pool/)
-* [Pool 简介](Pool/Introduction.md)
+* [[译]入门示例](Pool/Simple-Exmaple.md)
+* [GenericObjectPoolConfig](GenericObjectPoolConfig.md)
+
