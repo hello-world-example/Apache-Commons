@@ -2,7 +2,7 @@
 
 
 
-### 读取 properties 文件
+## 读取 properties 文件
 
 `database.properties` 是一个配置文件的示例：
 
@@ -36,7 +36,7 @@ Iterator<String> database = config.getKeys("database");
 
 
 
-### 读取 XML 文件
+## 读取 XML 文件
 
 `paths.xml` 文件内容如下:
 
@@ -78,7 +78,7 @@ String secondPath = xmlConfiguration.getString("processing.paths.path(1)");
 
 
 
-### 更新配置
+## 更新配置
 
 ```java
 Configurations configs = new Configurations();

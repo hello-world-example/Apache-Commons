@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-${person.name}
+
+person:
+  name: Kail
+  age: 27

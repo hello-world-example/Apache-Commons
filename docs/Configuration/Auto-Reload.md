@@ -1,20 +1,8 @@
-package xyz.kail.demo.apache.common.conf.properties;
+# 自动加载
 
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.builder.ConfigurationBuilderEvent;
-import org.apache.commons.configuration2.builder.EventListenerParameters;
-import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
-import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
 
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
-public class ReloadingConfigEventTest {
-
-    public static void main(String[] args) throws Exception {
-
+```java
 URL pathsRes = ClassLoader.getSystemResource("comment.properties");
 
 EventListenerParameters listenerParams = new EventListenerParameters();
@@ -37,6 +25,5 @@ PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(
         TimeUnit.SECONDS);
 
 trigger.start();
+```
 
-    }
-} 
