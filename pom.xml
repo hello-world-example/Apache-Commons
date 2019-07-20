@@ -6,7 +6,11 @@
 
     <groupId>Apache-Commons</groupId>
     <artifactId>Apache-Commons</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>configuration</module>
+    </modules>
 
 
     <properties>
