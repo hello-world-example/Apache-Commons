@@ -2,20 +2,17 @@
 
 ## A Simple Pool Client
 
-Suppose you're writing a set of `java.io.Reader` utilities, and would like to provide a method for dumping the contents of a `Reader` to a `String`. Here's the code for the `ReaderUtil`, implemented without an `ObjectPool`:
+假设您正在编写  `java.io.Reader`  工具包，并提供将  `Reader` 转换成 `String` 的方法。以下是在没有使用 `ObjectPool` 的情况下实现的  `ReaderUtil` 的代码：
 
 ```java
 import java.io.Reader; 
 import java.io.IOException; 
  
 public class ReaderUtil { 
+  
     public ReaderUtil() { 
     } 
  
-    /** 
-     * Dumps the contents of the {@link Reader} to a 
-     * String, closing the {@link Reader} when done. 
-     */ 
     public String readToString(Reader in) throws IOException { 
         StringBuffer buf = new StringBuffer(); 
         try { 
@@ -23,8 +20,6 @@ public class ReaderUtil {
                 buf.append((char)c); 
             } 
             return buf.toString(); 
-        } catch(IOException e) { 
-            throw e; 
         } finally { 
             try { 
                 in.close(); 
@@ -36,9 +31,7 @@ public class ReaderUtil {
 }
 ```
 
-For the sake of this example, let's assume we want to pool the `StringBuffer`s used to buffer the `Reader`'s contents. (A pool of `StringBuffer`s may or may not be useful in practice. We're just using it as a simple example here.)
-
-Let's further assume that a complete pool implementation will be provided via a constructor. (We'll show you how to create such an implementation in just a moment.) Then to use the pool we simply call `borrowObject` to obtain the buffer, and then call `returnObject` when we're done with it. Then a `ReaderUtil` implementation using a pool of `StringBuffer`s might look like this:
+以下是使用 Pool 的代码示例
 
 ```java
 import java.io.IOException;
@@ -53,14 +46,12 @@ public class ReaderUtil {
         this.pool = pool;
     }
 
-    /**
-     * Dumps the contents of the {@link Reader} to a String, closing the {@link Reader} when done.
-     */
-    public String readToString(Reader in)
-        throws IOException {
+    public String readToString(Reader in) throws IOException {
         StringBuffer buf = null;
         try {
+            // ❤❤❤ 从 Pool 中获取一个对象实例 ❤❤❤
             buf = pool.borrowObject();
+          
             for (int c = in.read(); c != -1; c = in.read()) {
                 buf.append((char) c);
             }
@@ -77,6 +68,7 @@ public class ReaderUtil {
             }
             try {
                 if (null != buf) {
+                  	// ❤❤❤ 归还对象到 Pool 中 ❤❤❤
                     pool.returnObject(buf);
                 }
             } catch (Exception e) {
@@ -87,45 +79,40 @@ public class ReaderUtil {
 }
 ```
 
-Since we've constrained ourselves to the `ObjectPool` interface, an arbitrary pool implementation (returning, in our case, `StringBuffer`s) can be used. When a different or "better" pool implementation comes along, we can simply drop it into our `ReaderUtil` without changing a line of code.
 
-## A PooledObjectFactory
 
-The implementations provided in pool2 wrap pooled objects in `PooledObject` wrappers for internal use by the pool and object factories. The `PooledObjectFactory`interface defines lifecycle methods for pooled objects. The simplest way to implement a `PoolableObjectFactory` is to extend [`BasePooledObjectFactory`](http://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/BasePooledObjectFactory.html).
+## PooledObjectFactory
 
-Here's a `PooledObjectFactory` implementation that creates `StringBuffer`s as used above.
+实现 `PoolableObjectFactory` 的最简单的方式是继承 [`BasePooledObjectFactory`](http://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/BasePooledObjectFactory.html).
 
 ```java
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
-public class StringBufferFactory
-    extends BasePooledObjectFactory<StringBuffer> {
+public class StringBufferFactory extends BasePooledObjectFactory<StringBuffer> {
 
+    // BasePooledObjectFactory 抽象方法
     @Override
     public StringBuffer create() {
         return new StringBuffer();
     }
 
-    /**
-     * Use the default PooledObject implementation.
-     */
+    // BasePooledObjectFactory 抽象方法
     @Override
     public PooledObject<StringBuffer> wrap(StringBuffer buffer) {
         return new DefaultPooledObject<StringBuffer>(buffer);
     }
 
     /**
-     * When an object is returned to the pool, clear the buffer.
+     * 当对象被归还到 pool 变为不活跃时，清除 buffer
      */
     @Override
     public void passivateObject(PooledObject<StringBuffer> pooledObject) {
         pooledObject.getObject().setLength(0);
     }
 
-    // for all other methods, the no-op implementation
-    // in BasePooledObjectFactory will suffice
+    // 对于其他方法，BasePooledObjectFactory 中的默认空的实现就足够了
 }
 ```
 
