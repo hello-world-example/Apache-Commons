@@ -11,6 +11,7 @@
     <modules>
         <module>configuration2</module>
         <module>pool2</module>
+        <module>ognl</module>
     </modules>
 
 
