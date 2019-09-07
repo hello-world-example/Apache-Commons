@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Exmaple | Apache-Commons</title>
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
+
+
+
+
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main class="flex container">
+
+    <aside class="book-menu fixed">
+      <nav>
+<h2 class="book-brand">
+  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+</h2>
+
+
+
+
+
+
+    
+  
+  
+  
+
+  <style>
+  nav ul a[href$="\2f Apache-Commons\2f docs\2fPool\2fSimple-Exmaple\2f "] {
+      color: #004ed0;
+  }
+  </style>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul></li>
+</ul>
+
+
+
+
+
+
+
+</nav>
+
+
+<script>
+(function() {
+  var menu = document.querySelector("aside.book-menu nav");
+  addEventListener("beforeunload", function(event) {
+    localStorage.setItem("menu.scrollTop", menu.scrollTop);
+  });
+  menu.scrollTop = localStorage.getItem("menu.scrollTop");
+})();
+</script>
+
+    </aside>
+
+    <div class="book-page">
+      <header class="flex align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+  </label>
+  <strong>Simple Exmaple</strong>
+</header>
+
+      
+<article class="markdown">
+
+<h1 id="入门示例">入门示例</h1>
+
+<h2 id="a-simple-pool-client">A Simple Pool Client</h2>
+
+<p>假设您正在编写  <code>java.io.Reader</code>  工具包，并提供将  <code>Reader</code> 转换成 <code>String</code> 的方法。以下是在没有使用 <code>ObjectPool</code> 的情况下实现的  <code>ReaderUtil</code> 的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> <span style="color:#a6e22e">java</span>.<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>; 
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">java</span>.<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">IOException</span>; 
+ 
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">class</span> ReaderUtil { 
+  
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ReaderUtil</span>() { 
+    } 
+ 
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">String</span> readToString(Reader <span style="color:#a6e22e">in</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> { 
+        StringBuffer <span style="color:#a6e22e">buf</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer(); 
+        <span style="color:#66d9ef">try</span> { 
+            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">read</span>(); c <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1; c <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">read</span>()) { 
+                buf.<span style="color:#a6e22e">append</span>((<span style="color:#66d9ef">char</span>)c); 
+            } 
+            <span style="color:#66d9ef">return</span> buf.<span style="color:#a6e22e">toString</span>(); 
+        } <span style="color:#66d9ef">finally</span> { 
+            <span style="color:#66d9ef">try</span> { 
+                in.<span style="color:#a6e22e">close</span>(); 
+            } <span style="color:#66d9ef">catch</span>(Exception <span style="color:#a6e22e">e</span>) { 
+                <span style="color:#75715e">// ignored 
+</span><span style="color:#75715e"></span>            } 
+        } 
+    } 
+}</code></pre></div>
+<p>以下是使用 Pool 的代码示例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> <span style="color:#a6e22e">java</span>.<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">IOException</span>;
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">java</span>.<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>;
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">pool2</span>.<span style="color:#a6e22e">ObjectPool</span>;
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">class</span> ReaderUtil {
+    
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">ObjectPool</span><span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pool</span>;
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ReaderUtil</span>(ObjectPool<span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pool</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">pool</span> <span style="color:#f92672">=</span> pool;
+    }
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">String</span> readToString(Reader <span style="color:#a6e22e">in</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
+        StringBuffer <span style="color:#a6e22e">buf</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+        <span style="color:#66d9ef">try</span> {
+            <span style="color:#75715e">// ❤❤❤ 从 Pool 中获取一个对象实例 ❤❤❤
+</span><span style="color:#75715e"></span>            buf <span style="color:#f92672">=</span> pool.<span style="color:#a6e22e">borrowObject</span>();
+          
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">read</span>(); c <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1; c <span style="color:#f92672">=</span> in.<span style="color:#a6e22e">read</span>()) {
+                buf.<span style="color:#a6e22e">append</span>((<span style="color:#66d9ef">char</span>) c);
+            }
+            <span style="color:#66d9ef">return</span> buf.<span style="color:#a6e22e">toString</span>();
+        } <span style="color:#66d9ef">catch</span> (IOException <span style="color:#a6e22e">e</span>) {
+            <span style="color:#66d9ef">throw</span> e;
+        } <span style="color:#66d9ef">catch</span> (Exception <span style="color:#a6e22e">e</span>) {
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(<span style="color:#e6db74">&#34;Unable to borrow buffer from pool&#34;</span> <span style="color:#f92672">+</span> e.<span style="color:#a6e22e">toString</span>());
+        } <span style="color:#66d9ef">finally</span> {
+            <span style="color:#66d9ef">try</span> {
+                in.<span style="color:#a6e22e">close</span>();
+            } <span style="color:#66d9ef">catch</span> (Exception <span style="color:#a6e22e">e</span>) {
+                <span style="color:#75715e">// ignored
+</span><span style="color:#75715e"></span>            }
+            <span style="color:#66d9ef">try</span> {
+                <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">null</span> <span style="color:#f92672">!=</span> buf) {
+                  	<span style="color:#75715e">// ❤❤❤ 归还对象到 Pool 中 ❤❤❤
+</span><span style="color:#75715e"></span>                    pool.<span style="color:#a6e22e">returnObject</span>(buf);
+                }
+            } <span style="color:#66d9ef">catch</span> (Exception <span style="color:#a6e22e">e</span>) {
+                <span style="color:#75715e">// ignored
+</span><span style="color:#75715e"></span>            }
+        }
+    }
+}</code></pre></div>
+<h2 id="pooledobjectfactory">PooledObjectFactory</h2>
+
+<p>实现 <code>PoolableObjectFactory</code> 的最简单的方式是继承 <a href="http://commons.apache.org/proper/commons-pool/apidocs/org/apache/commons/pool2/BasePooledObjectFactory.html"><code>BasePooledObjectFactory</code></a>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">pool2</span>.<span style="color:#a6e22e">BasePooledObjectFactory</span>;
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">pool2</span>.<span style="color:#a6e22e">PooledObject</span>;
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">pool2</span>.<span style="color:#a6e22e">impl</span>.<span style="color:#a6e22e">DefaultPooledObject</span>;
+
+<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">class</span> StringBufferFactory <span style="color:#a6e22e">extends</span> BasePooledObjectFactory<span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span> {
+
+    <span style="color:#75715e">// BasePooledObjectFactory 抽象方法
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">StringBuffer</span> create() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> StringBuffer();
+    }
+
+    <span style="color:#75715e">// BasePooledObjectFactory 抽象方法
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">PooledObject</span><span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">wrap</span>(StringBuffer <span style="color:#a6e22e">buffer</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DefaultPooledObject<span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span>(buffer);
+    }
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 当对象被归还到 pool 变为不活跃时，清除 buffer
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">void</span> passivateObject(PooledObject<span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">pooledObject</span>) {
+        pooledObject.<span style="color:#a6e22e">getObject</span>().<span style="color:#a6e22e">setLength</span>(0);
+    }
+
+    <span style="color:#75715e">// 对于其他方法，BasePooledObjectFactory 中的默认空的实现就足够了
+</span><span style="color:#75715e"></span>}</code></pre></div>
+<p>We can, for example, use this factory with the <code>GenericObjectPool</code> to instantiate our <code>ReaderUtil</code> as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ReaderUtil <span style="color:#a6e22e">readerUtil</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReaderUtil(<span style="color:#66d9ef">new</span> GenericObjectPool<span style="color:#f92672">&lt;</span>StringBuffer<span style="color:#f92672">&gt;</span>(<span style="color:#66d9ef">new</span> StringBufferFactory()));</code></pre></div>
+<h2 id="read-more">Read More</h2>
+
+<ul>
+<li><a href="http://commons.apache.org/proper/commons-pool/examples.html">官方 入门示例</a></li>
+</ul>
+</article>
+
+      
+<div class="book-footer justify-between">
+  
+  <div>
+    
+    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    </a>
+  </div>
+  
+  
+  <div>
+    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Pool/Simple-Exmaple.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    </a>
+  </div>
+  
+</div>
+
+
+      
+    </div>
+
+    
+  
+
+  <aside class="book-toc level-3 fixed">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#入门示例">入门示例</a>
+<ul>
+<li><a href="#a-simple-pool-client">A Simple Pool Client</a></li>
+<li><a href="#pooledobjectfactory">PooledObjectFactory</a></li>
+<li><a href="#read-more">Read More</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+
+
+
+  </main>
+  
+  
+  
+</body>
+
+</html>

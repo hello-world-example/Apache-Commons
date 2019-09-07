@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ognl | Apache-Commons</title>
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
+
+
+
+
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="alternate" type="application/rss+xml" href="https://hello-world-example.github.io/Apache-Commons/docs/Ognl/index.xml" title="Apache-Commons" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main class="flex container">
+
+    <aside class="book-menu fixed">
+      <nav>
+<h2 class="book-brand">
+  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+</h2>
+
+
+
+
+
+
+    
+  
+  
+  
+
+  <style>
+  nav ul a[href$="\2f Apache-Commons\2f docs\2fOgnl\2f "] {
+      color: #004ed0;
+  }
+  </style>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul></li>
+</ul>
+
+
+
+
+
+
+
+</nav>
+
+
+<script>
+(function() {
+  var menu = document.querySelector("aside.book-menu nav");
+  addEventListener("beforeunload", function(event) {
+    localStorage.setItem("menu.scrollTop", menu.scrollTop);
+  });
+  menu.scrollTop = localStorage.getItem("menu.scrollTop");
+})();
+</script>
+
+    </aside>
+
+    <div class="book-page">
+      <header class="flex align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+  </label>
+  <strong>Ognl</strong>
+</header>
+
+      
+<article class="markdown">
+
+<h1 id="ognl">Ognl</h1>
+
+<p>OGNL 是 <code>Object-Graph Navigation Language</code> 的缩写，它是一种功能强大的表达式语言（Expression Language，简称为 <code>EL</code>），通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能</p>
+
+<h2 id="maven-依赖">Maven 依赖</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">dependency</span>&gt;
+    &lt;<span style="color:#f92672">groupId</span>&gt;ognl&lt;/<span style="color:#f92672">groupId</span>&gt;
+    &lt;<span style="color:#f92672">artifactId</span>&gt;ognl&lt;/<span style="color:#f92672">artifactId</span>&gt;
+    &lt;<span style="color:#f92672">version</span>&gt;3.1.24&lt;/<span style="color:#f92672">version</span>&gt;
+&lt;/<span style="color:#f92672">dependency</span>&gt;</code></pre></div>
+<h2 id="root">Root</h2>
+
+<blockquote>
+<ul>
+<li><code>Object Ognl.getValue(String expression, Object root)</code></li>
+<li><code>setValue(String expression, Object root, Object value)</code></li>
+</ul>
+</blockquote>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>&quot;person.name&quot;</code> = <code>&quot;#root.person.name&quot;</code></td>
+<td>获取对象属性值</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>&quot;username + ',' + sex&quot;</code></td>
+<td>同时获取多个值并用 逗号分割</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;length()&quot;, &quot;12345&quot;)</code></td>
+<td>访问对象方法</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(Ognl.parseExpression(&quot;length()&quot;), &quot;12345&quot;)</code></td>
+<td>访问对象方法</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;substring(0,1)&quot;, &quot;12345&quot;)</code></td>
+<td>访问对象方法</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="context">Context</h2>
+
+<blockquote>
+<ul>
+<li><code>Object Ognl.getValue(String expression, Map context, Object root)</code></li>
+<li><code>setValue(String expression, Map context, Object root, Object value)</code></li>
+</ul>
+
+<p>访问 Context 表达式前面需要加上 <code>#</code>，root 也属于 Context，使用 <code>#root</code> 访问，也可以省略</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Map<span style="color:#f92672">&lt;</span>String, Person<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">context</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span>String, Person<span style="color:#f92672">&gt;</span>();
+context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;p1&#34;</span>, p1);
+context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;p2&#34;</span>, p2);</code></pre></div></blockquote>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Ognl.getValue(&quot;#p1.name&quot;, context, new Object())</code></td>
+<td>获取 Context 中的对象属性</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="赋值">赋值</h2>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>&quot;#u.username = '暗之幻影'&quot;</code></td>
+<td></td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>&quot;#u.username = '风',#p.name = '云'&quot;</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="静态方法">静态方法</h2>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>&quot;@System@out.println(#this)&quot;</code></td>
+<td>打印对象本身</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>描述</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="注意事项">注意事项</h2>
+
+<h3 id="memberaccess-implementation-must-be-provided">MemberAccess implementation must be provided!</h3>
+
+<p><code>ognl:ognl:3.2.x</code> 后，以下代码会报错，<code>MemberAccess</code> 的实现需要手动设置</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Ognl.<span style="color:#a6e22e">getValue</span>(<span style="color:#e6db74">&#34;length()&#34;</span>, <span style="color:#e6db74">&#34;12345&#34;</span>)</code></pre></div>
+<blockquote>
+<p><a href="https://blog.csdn.net/LX928525166/article/details/82699572">MemberAccess implementation must be provided! &ndash;Ognl3.2.6的异常解决方案</a></p>
+</blockquote>
+
+<h2 id="read-more">Read More</h2>
+
+<ul>
+<li><a href="https://wooyun.js.org/drops/OGNL设计及使用不当造成的远程代码执行漏洞.html">OGNL设计及使用不当造成的远程代码执行漏洞</a></li>
+</ul>
+</article>
+
+      
+<div class="book-footer justify-between">
+  
+  <div>
+    
+    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    </a>
+  </div>
+  
+  
+  <div>
+    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Ognl/_index.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    </a>
+  </div>
+  
+</div>
+
+
+      
+    </div>
+
+    
+  
+
+  <aside class="book-toc level-3 fixed">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#ognl">Ognl</a>
+<ul>
+<li><a href="#maven-依赖">Maven 依赖</a></li>
+<li><a href="#root">Root</a></li>
+<li><a href="#context">Context</a></li>
+<li><a href="#赋值">赋值</a></li>
+<li><a href="#静态方法">静态方法</a></li>
+<li><a href="#注意事项">注意事项</a>
+<ul>
+<li><a href="#memberaccess-implementation-must-be-provided">MemberAccess implementation must be provided!</a></li>
+</ul></li>
+<li><a href="#read-more">Read More</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+
+
+
+  </main>
+  
+  
+  
+</body>
+
+</html>

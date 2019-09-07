@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties | Apache-Commons</title>
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
+
+
+
+
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main class="flex container">
+
+    <aside class="book-menu fixed">
+      <nav>
+<h2 class="book-brand">
+  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+</h2>
+
+
+
+
+
+
+    
+  
+  
+  
+
+  <style>
+  nav ul a[href$="\2f Apache-Commons\2f docs\2f Configuration\2fProperties\2f "] {
+      color: #004ed0;
+  }
+  </style>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul></li>
+</ul>
+
+
+
+
+
+
+
+</nav>
+
+
+<script>
+(function() {
+  var menu = document.querySelector("aside.book-menu nav");
+  addEventListener("beforeunload", function(event) {
+    localStorage.setItem("menu.scrollTop", menu.scrollTop);
+  });
+  menu.scrollTop = localStorage.getItem("menu.scrollTop");
+})();
+</script>
+
+    </aside>
+
+    <div class="book-page">
+      <header class="flex align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+  </label>
+  <strong>Properties</strong>
+</header>
+
+      
+<article class="markdown">
+
+<h1 id="properties-配置">Properties 配置</h1>
+
+<h2 id="属性引用">属性引用</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">database.host = db.acme.com
+database.port = 8199
+
+database.address = ${database.host}:${database.port}</code></pre></div>
+<p>使用方式一样</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// db.acme.com:8199
+</span><span style="color:#75715e"></span>properties.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;database.address&#34;</span>)</code></pre></div>
+<h2 id="包含其他配置文件">包含其他配置文件</h2>
+
+<p><strong>database.properties</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">database.timeout = 60000
+
+include = database_db1.properties
+include = database_db2.properties</code></pre></div>
+<p><strong>database_db1.properties</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">database.db1.host = db.acme.com1
+database.db1.port = 81991
+database.db1.user = admin1
+database.db1.password = ???1</code></pre></div>
+<p><strong>database_db2.properties</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">database.db2.host = db.acme.com2
+database.db2.port = 81992
+database.db2.user = admin2
+database.db2.password = ???2</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// db.acme.com1
+</span><span style="color:#75715e"></span>properties.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;database.db1.host&#34;</span>);
+
+<span style="color:#75715e">// db.acme.com2
+</span><span style="color:#75715e"></span>properties.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;database.db2.host&#34;</span>);</code></pre></div>
+<h2 id="特殊编码">特殊编码</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">key = \u4e2d\u6587\u5b57\u7b26
+
+config.dirs = C:\\Temp\\,D:\\data\\</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 中文字符
+</span><span style="color:#75715e"></span>properties.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;key&#34;</span>);
+
+<span style="color:#75715e">// [C:\Temp\,D:\data\]
+</span><span style="color:#75715e"></span>properties.<span style="color:#a6e22e">getList</span>(String.<span style="color:#a6e22e">class</span>, <span style="color:#e6db74">&#34;config.dirs&#34;</span>)</code></pre></div>
+<blockquote>
+<p><a href="https://tool.chinaz.com/tools/unicode.aspx">Unicode编码转换</a></p>
+</blockquote>
+
+<h2 id="read-more">Read More</h2>
+
+<ul>
+<li><a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_properties.html">Properties files</a></li>
+</ul>
+</article>
+
+      
+<div class="book-footer justify-between">
+  
+  <div>
+    
+    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    </a>
+  </div>
+  
+  
+  <div>
+    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Configuration/Properties.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    </a>
+  </div>
+  
+</div>
+
+
+      
+    </div>
+
+    
+  
+
+  <aside class="book-toc level-3 fixed">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#properties-配置">Properties 配置</a>
+<ul>
+<li><a href="#属性引用">属性引用</a></li>
+<li><a href="#包含其他配置文件">包含其他配置文件</a></li>
+<li><a href="#特殊编码">特殊编码</a></li>
+<li><a href="#read-more">Read More</a></li>
+</ul></li>
+</ul>
+</nav>
+  </aside>
+
+
+
+  </main>
+  
+  
+  
+</body>
+
+</html>

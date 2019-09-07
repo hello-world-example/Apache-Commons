@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generic Object Pool Config | Apache-Commons</title>
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
+
+
+
+
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" style="display: none" id="menu-control" />
+  <main class="flex container">
+
+    <aside class="book-menu fixed">
+      <nav>
+<h2 class="book-brand">
+  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+</h2>
+
+
+
+
+
+
+    
+  
+  
+  
+
+  <style>
+  nav ul a[href$="\2f Apache-Commons\2f docs\2fPool\2fGenericObjectPoolConfig\2f "] {
+      color: #004ed0;
+  }
+  </style>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul></li>
+<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+
+<ul>
+<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul></li>
+</ul>
+
+
+
+
+
+
+
+</nav>
+
+
+<script>
+(function() {
+  var menu = document.querySelector("aside.book-menu nav");
+  addEventListener("beforeunload", function(event) {
+    localStorage.setItem("menu.scrollTop", menu.scrollTop);
+  });
+  menu.scrollTop = localStorage.getItem("menu.scrollTop");
+})();
+</script>
+
+    </aside>
+
+    <div class="book-page">
+      <header class="flex align-center justify-between book-header">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+  </label>
+  <strong>Generic Object Pool Config</strong>
+</header>
+
+      
+<article class="markdown">
+
+<h1 id="genericobjectpoolconfig">GenericObjectPoolConfig</h1>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>默认值</th>
+<th>作用</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>maxTotal</td>
+<td>int</td>
+<td>8</td>
+<td>池中最多可用的实例个数</td>
+</tr>
+
+<tr>
+<td>maxIdle</td>
+<td>int</td>
+<td>8</td>
+<td>池中最多可容纳的实例（instances）个数</td>
+</tr>
+
+<tr>
+<td>minIdle</td>
+<td>int</td>
+<td>0</td>
+<td>池中最少需要容纳的实例（instances）个数</td>
+</tr>
+
+<tr>
+<td>lifo</td>
+<td>boolean</td>
+<td>TRUE</td>
+<td>池中实例的操作是否按照LIFO（后进先出）的原则</td>
+</tr>
+
+<tr>
+<td>fairness</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>租借池化对象的客户端按照FIFO进行</td>
+</tr>
+
+<tr>
+<td>maxWaitMillis</td>
+<td>long</td>
+<td>-1</td>
+<td>调用borrowObject方法时，需要等待的最长时间</td>
+</tr>
+
+<tr>
+<td>minEvictableIdleTimeMillis</td>
+<td>long</td>
+<td>1800000</td>
+<td>池中对象处于空闲状态开始到被回收的最短时间</td>
+</tr>
+
+<tr>
+<td>softMinEvictableIdleTimeMillis</td>
+<td>long</td>
+<td>3</td>
+<td>池中对象处于空闲状态开始到被回收的最短时间</td>
+</tr>
+
+<tr>
+<td>numTestsPerEvictionRun</td>
+<td>int</td>
+<td>3</td>
+<td>池中处于空闲状态的对象每次被检测是否回收时 最多只检测3个处于空闲状态的对象,比如该值设置为3,此时池中有5个闲置对象,那么每次只会检查前三个闲置对象</td>
+</tr>
+
+<tr>
+<td>evictionPolicyClassName</td>
+<td>String</td>
+<td>org.apache.commons.pool2. impl.DefaultEvictionPolicy</td>
+<td>回收策略</td>
+</tr>
+
+<tr>
+<td>testOnCreate</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>调用borrowObject方法时，依据此标识判断是否 需要对返回的结果进行校验，如果校验失败会删 除当前实例，并尝试再次获取</td>
+</tr>
+
+<tr>
+<td>testOnBorrow</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>调用borrowObject方法时，依据此标识判断是否 需要对返回的结果进行校验，如果校验失败会 删除当前实例，并尝试再次获取</td>
+</tr>
+
+<tr>
+<td>testOnReturn</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>调用returnObject方法时，依据此标识判断是否 需要对返回的结果进行校验</td>
+</tr>
+
+<tr>
+<td>testWhileIdle</td>
+<td>boolean</td>
+<td>FALSE</td>
+<td>闲置实例校验标识，如果校验失败会删除当前实例</td>
+</tr>
+
+<tr>
+<td>timeBetweenEvictionRunsMillis</td>
+<td>long</td>
+<td>-1</td>
+<td>闲置实例校验器启动的时间间隔，单位是毫秒</td>
+</tr>
+
+<tr>
+<td>blockWhenExhausted</td>
+<td>boolean</td>
+<td>TRUE</td>
+<td>当池中对象都被借出后，客户端来租借对象， 此时是否进行阻塞还是非阻塞，默认阻塞</td>
+</tr>
+
+<tr>
+<td>jmxEnabled</td>
+<td>boolean</td>
+<td>TRUE</td>
+<td>开启JMX开关</td>
+</tr>
+
+<tr>
+<td>jmxNamePrefix</td>
+<td>String</td>
+<td>pool</td>
+<td>JMX前缀</td>
+</tr>
+
+<tr>
+<td>jmxNameBase</td>
+<td>String</td>
+<td>null</td>
+<td>JMX根名字</td>
+</tr>
+</tbody>
+</table>
+</article>
+
+      
+<div class="book-footer justify-between">
+  
+  <div>
+    
+    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    </a>
+  </div>
+  
+  
+  <div>
+    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Pool/GenericObjectPoolConfig.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    </a>
+  </div>
+  
+</div>
+
+
+      
+    </div>
+
+    
+  
+
+
+
+  </main>
+  
+  
+  
+</body>
+
+</html>

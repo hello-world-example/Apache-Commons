@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Apache-Commons</title>
+    <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/</link>
+    <description>Recent content on Apache-Commons</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://hello-world-example.github.io/Apache-Commons/docs/Configuration/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Auto-Reload/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Auto-Reload/</guid>
+      <description>自动加载 URL pathsRes = ClassLoader.getSystemResource(&amp;#34;comment.properties&amp;#34;); EventListenerParameters listenerParams = new EventListenerParameters(); listenerParams.addEventListener( ConfigurationBuilderEvent.RESET, event -&amp;gt; System.out.println(&amp;#34;Event:&amp;#34; + event.getEventType().getName()) ); FileBasedBuilderParameters parameters = new Parameters().fileBased().setURL(pathsRes); ReloadingFileBasedConfigurationBuilder&amp;lt;PropertiesConfiguration&amp;gt; builder = new ReloadingFileBasedConfigurationBuilder&amp;lt;&amp;gt;(PropertiesConfiguration.class) .configure(parameters, listenerParams); PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger( builder.getReloadingController(), null, 1, TimeUnit.SECONDS); trigger.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Dependencies/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Dependencies/</guid>
+      <description>Runtime Dependencies    Component Dependencies     Core commons-lang commons-logging   Configuration builders commons-beanutils   PropertyListConfiguration
+XMLPropertyListConfiguration commons-codec   JSONConfiguration com.fasterxml.jackson.core:jackson-databind   YAMLConfiguration org.yaml:snakeyaml   ConfigurationDynaBean commons-beanutils   XPathExpressionEngine commons-jxpath   CatalogResolver xml-resolver   Web configurations servlet-api   ExprLookup commons-jexl   VFSFileSystem
+VFSFileChangedReloadingStrategy commons-vfs   ConfigPropertySource spring-core    Maven 依赖 Core &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Properties/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Properties/</guid>
+      <description>Properties 配置 属性引用 database.host = db.acme.com database.port = 8199 database.address = ${database.host}:${database.port} 使用方式一样
+// db.acme.com:8199 properties.getString(&amp;#34;database.address&amp;#34;) 包含其他配置文件 database.properties
+database.timeout = 60000 include = database_db1.properties include = database_db2.properties database_db1.properties
+database.db1.host = db.acme.com1 database.db1.port = 81991 database.db1.user = admin1 database.db1.password = ???1 database_db2.properties
+database.db2.host = db.acme.com2 database.db2.port = 81992 database.db2.user = admin2 database.db2.password = ???2// db.acme.com1 properties.getString(&amp;#34;database.db1.host&amp;#34;); // db.acme.com2 properties.getString(&amp;#34;database.db2.host&amp;#34;); 特殊编码 key = \u4e2d\u6587\u5b57\u7b26 config.dirs = C:\\Temp\\,D:\\data\\// 中文字符 properties.getString(&amp;#34;key&amp;#34;); // [C:\Temp\,D:\data\] properties.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Quick-Start-Guide/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Quick-Start-Guide/</guid>
+      <description>快速开始指南 读取 properties 文件 database.properties 是一个配置文件的示例：
+database.host = db.acme.com database.port = 8199 database.user = admin database.password = ??? database.timeout = 60000 zk.addresses = host1,host2,host3 读取这个文件最简单的方式是通过 Configurations 帮助类。 这个类提供了一系列从不同源创建配置对象的方法。读取 properties 代码如下：
+Configurations configs = new Configurations(); URL databaseRes = ClassLoader.getSystemResource(&amp;#34;database.properties&amp;#34;); Configuration config = configs.properties(databaseRes); String dbHost = config.getString(&amp;#34;database.host&amp;#34;); int dbPort = config.getInt(&amp;#34;database.port&amp;#34;); List&amp;lt;String&amp;gt; addresses = config.getList(String.class, &amp;#34;zk.addresses&amp;#34;); Iterator&amp;lt;String&amp;gt; database = config.getKeys(&amp;#34;database&amp;#34;); 读取 XML 文件 paths.xml 文件内容如下:
+&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;ISO-8859-1&amp;#34; ?&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;processing stage=&amp;#34;qa&amp;#34;&amp;gt; &amp;lt;paths&amp;gt; &amp;lt;path&amp;gt;/data/path1&amp;lt;/path&amp;gt; &amp;lt;path&amp;gt;/data/otherpath&amp;lt;/path&amp;gt; &amp;lt;path&amp;gt;/var/log&amp;lt;/path&amp;gt; &amp;lt;/paths&amp;gt; &amp;lt;/processing&amp;gt; &amp;lt;/configuration&amp;gt; 读取 xml 配置文件的方式与 properties 文件类似：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Yaml/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Yaml/</guid>
+      <description>操作 YAML 文件 新增依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.yaml&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;snakeyaml&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.24&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; my.yaml spring: application: name: spring-${person.name} person: name: Kail age: 27 代码示例 URL myYaml = ClassLoader.getSystemResource(&amp;#34;my.yaml&amp;#34;); Configurations configurations = new Configurations(); YAMLConfiguration configuration = configurations.fileBased(YAMLConfiguration.class, myYaml); String string = configuration.</description>
+    </item>
+    
+  </channel>
+</rss>

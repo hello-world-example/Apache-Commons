@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Apache-Commons</title>
+    <link>https://hello-world-example.github.io/Apache-Commons/docs/Pool/</link>
+    <description>Recent content on Apache-Commons</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://hello-world-example.github.io/Apache-Commons/docs/Pool/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Pool/GenericObjectPoolConfig/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Pool/GenericObjectPoolConfig/</guid>
+      <description>GenericObjectPoolConfig    属性 类型 默认值 作用     maxTotal int 8 池中最多可用的实例个数   maxIdle int 8 池中最多可容纳的实例（instances）个数   minIdle int 0 池中最少需要容纳的实例（instances）个数   lifo boolean TRUE 池中实例的操作是否按照LIFO（后进先出）的原则   fairness boolean FALSE 租借池化对象的客户端按照FIFO进行   maxWaitMillis long -1 调用borrowObject方法时，需要等待的最长时间   minEvictableIdleTimeMillis long 1800000 池中对象处于空闲状态开始到被回收的最短时间   softMinEvictableIdleTimeMillis long 3 池中对象处于空闲状态开始到被回收的最短时间   numTestsPerEvictionRun int 3 池中处于空闲状态的对象每次被检测是否回收时 最多只检测3个处于空闲状态的对象,比如该值设置为3,此时池中有5个闲置对象,那么每次只会检查前三个闲置对象   evictionPolicyClassName String org.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/Pool/Simple-Exmaple/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/Pool/Simple-Exmaple/</guid>
+      <description>入门示例 A Simple Pool Client 假设您正在编写 java.io.Reader 工具包，并提供将 Reader 转换成 String 的方法。以下是在没有使用 ObjectPool 的情况下实现的 ReaderUtil 的代码：
+import java.io.Reader; import java.io.IOException; public class ReaderUtil { public ReaderUtil() { } public String readToString(Reader in) throws IOException { StringBuffer buf = new StringBuffer(); try { for(int c = in.read(); c != -1; c = in.read()) { buf.append((char)c); } return buf.toString(); } finally { try { in.close(); } catch(Exception e) { // ignored  } } } } 以下是使用 Pool 的代码示例</description>
+    </item>
+    
+  </channel>
+</rss>
