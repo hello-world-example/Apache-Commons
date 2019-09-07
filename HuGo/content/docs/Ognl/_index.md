@@ -2,6 +2,16 @@
 
 OGNL 是 `Object-Graph Navigation Language` 的缩写，它是一种功能强大的表达式语言（Expression Language，简称为 `EL`），通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能
 
+## Maven 依赖
+
+```html
+<dependency>
+    <groupId>ognl</groupId>
+    <artifactId>ognl</artifactId>
+    <version>3.1.24</version>
+</dependency>
+```
+
 ## Root
 
 > - `Object Ognl.getValue(String expression, Object root)`
@@ -86,4 +96,4 @@ Ognl.getValue("length()", "12345")
 
 ## Read More
 
-- [OGNL设计及使用不当造成的远程代码执行漏洞](https://wooyun.js.org/drops/OGNL设计及使用不当造成的远程代码执行漏洞.html))
+- [OGNL设计及使用不当造成的远程代码执行漏洞](https://wooyun.js.org/drops/OGNL设计及使用不当造成的远程代码执行漏洞.html)

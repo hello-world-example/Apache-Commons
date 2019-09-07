@@ -1,8 +1,10 @@
+---
+bookToc: false
+---
+
 # tar 工具类
 
 对应的 Linxu `tar` 命令：
-
-
 
 - `tar cf <file.tar> <file>` 将由文件 `<file>` 创建名为`<file.tar>`归档文件，同时保留原文件
   - 如果加上参数 `z` 则归档之后会进行 gzip 压缩（`*.tar.gz`）
@@ -283,6 +285,8 @@ public abstract class TarUtil {
 
 
 
+## Read More
 
-
-> 代码来自：[Java压缩技术（七） TAR——Commons实现](https://snowolf.iteye.com/blog/648652)
+> - 代码来自：[Java压缩技术（七） TAR——Commons实现](https://snowolf.iteye.com/blog/648652)
+>
+> - [Java压缩技术（四） GZIP——Java原生实现](https://snowolf.iteye.com/blog/643010)

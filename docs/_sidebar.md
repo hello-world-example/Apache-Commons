@@ -1,6 +1,0 @@
-* [Apache Commons](/)
-    * [Codec](Codec/)
-    * [Compress](Compress/)
-    * [❤ Configuration](Configuration/)
-    * [❤ Pool](Pool/)
-    * 

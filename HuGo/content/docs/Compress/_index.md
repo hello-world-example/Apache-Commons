@@ -11,7 +11,10 @@
 - [org.apache.commons.compress.compressors.gzip](http://commons.apache.org/proper/commons-compress/apidocs/org/apache/commons/compress/compressors/gzip/package-summary.html)
 - [org.apache.commons.compress.compressors.snappy](http://commons.apache.org/proper/commons-compress/apidocs/org/apache/commons/compress/compressors/snappy/package-summary.html)
 
+## Class
 
+- [Class ArchiveStreamFactory](http://commons.apache.org/proper/commons-compress/apidocs/org/apache/commons/compress/archivers/ArchiveStreamFactory.html)
+- [Class CompressorStreamFactory](http://commons.apache.org/proper/commons-compress/apidocs/org/apache/commons/compress/compressors/CompressorStreamFactory.html)
 
 ## Links
 
