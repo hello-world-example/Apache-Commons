@@ -111,6 +111,10 @@ https://github.com/alex-shpak/hugo-book
 
 <p>OGNL 是 <code>Object-Graph Navigation Language</code> 的缩写，它是一种功能强大的表达式语言（Expression Language，简称为 <code>EL</code>），通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能</p>
 
+<blockquote>
+<p>OGNL  <a href="http://commons.apache.org/proper/commons-ognl/language-guide.html">Language Guide</a></p>
+</blockquote>
+
 <h2 id="maven-依赖">Maven 依赖</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">dependency</span>&gt;
     &lt;<span style="color:#f92672">groupId</span>&gt;ognl&lt;/<span style="color:#f92672">groupId</span>&gt;
@@ -242,8 +246,16 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
 <td>打印对象本身</td>
 <td></td>
 </tr>
+
+<tr>
+<td>TODO</td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table>
+
+<h2 id="this-引用">#this 引用</h2>
 
 <table>
 <thead>
@@ -256,12 +268,50 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
 
 <tbody>
 <tr>
+<td><code>Ognl.getValue(&quot;#this.username&quot;, user)</code></td>
+<td><code>#this</code> 指代 root 对象本身</td>
 <td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;username&quot;, user)</code></td>
+<td>同上</td>
 <td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;username.(#this.toLowerCase())&quot;, user)</code></td>
+<td>这里的 <code>#this</code> 指代 username</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;username.toLowerCase()&quot;, user)</code></td>
+<td>同上</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;#this.size.(#this &gt; 2 ? \&quot;大于2\&quot; : '不大于2')&quot;, Arrays.asList(1, 2, 3))</code></td>
+<td>第一个 <code>#this</code> 是 List，第二个 <code>#this</code> size</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;size.(#this &gt; 2 ? \&quot;大于2\&quot; : '不大于2')&quot;, Arrays.asList(1, 2, 3))</code></td>
+<td>同上</td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>Ognl.getValue(&quot;size().(#this &gt; 2 ? \&quot;大于2\&quot; : '不大于2')&quot;, Arrays.asList(1, 2, 3))</code></td>
+<td>同上</td>
 <td></td>
 </tr>
 </tbody>
 </table>
+
+<h2 id="创建对象">创建对象</h2>
 
 <table>
 <thead>
@@ -274,26 +324,20 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
 
 <tbody>
 <tr>
-<td></td>
-<td></td>
+<td><code>(List) Ognl.getValue(&quot;{'item1', 'item2', 'item3'}&quot;, new Object())</code></td>
+<td>创建列表</td>
 <td></td>
 </tr>
-</tbody>
-</table>
 
-<table>
-<thead>
 <tr>
-<th>表达式</th>
-<th>描述</th>
-<th></th>
+<td><code>(int[]) Ognl.getValue(&quot;new int[]{23,45,67}&quot;, root)</code></td>
+<td>创建数组</td>
+<td></td>
 </tr>
-</thead>
 
-<tbody>
 <tr>
-<td></td>
-<td></td>
+<td><code>(Map) Ognl.getValue(&quot;#{'key1':'value1','key2':'value1'}&quot;, root)</code></td>
+<td>创建 Map</td>
 <td></td>
 </tr>
 </tbody>
@@ -313,6 +357,8 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
 
 <ul>
 <li><a href="https://wooyun.js.org/drops/OGNL设计及使用不当造成的远程代码执行漏洞.html">OGNL设计及使用不当造成的远程代码执行漏洞</a></li>
+<li><a href="https://www.iteye.com/blog/jinyanliang-1161662">ognl表达式入门应用</a></li>
+<li><a href="https://github.com/alibaba/arthas/issues/11">【Arthas问题排查集】活用ognl表达式</a></li>
 </ul>
 </article>
 
@@ -321,7 +367,7 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
   
   <div>
     
-    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
+    <a href="https://github.com/hello-world-example/Apache-Commons/commit/0e5cdaf21152392eb1e05a7b451fa57244c3c6d5" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
       <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
     </a>
   </div>
@@ -352,6 +398,8 @@ context.<span style="color:#a6e22e">put</span>(<span style="color:#e6db74">&#34;
 <li><a href="#context">Context</a></li>
 <li><a href="#赋值">赋值</a></li>
 <li><a href="#静态方法">静态方法</a></li>
+<li><a href="#this-引用">#this 引用</a></li>
+<li><a href="#创建对象">创建对象</a></li>
 <li><a href="#注意事项">注意事项</a>
 <ul>
 <li><a href="#memberaccess-implementation-must-be-provided">MemberAccess implementation must be provided!</a></li>
