@@ -214,6 +214,8 @@ public class OgnlTestTest {
 
         System.out.println(Ognl.getValue("username.(#this.toLowerCase())", user));
         System.out.println(Ognl.getValue("username.toLowerCase()", user));
+
+        System.out.println(Ognl.getValue("username.{#this.toLowerCase()}", user));
     }
 
     // ******************* 如何把表达式的解释结果作为另外一个表达式,OGNL中括号的使用 **********************//
@@ -236,37 +238,6 @@ public class OgnlTestTest {
         System.out.println(value);
     }
 
-    @Test
-    public void testOgnl_18() throws Exception {
-        Person person = new Person();
-        Map context = new HashMap();
-        User u = new User();
-        u.setUsername("暗之幻影");
-        context.put("u", u);
-
-        /**
-         * 相当于调用person这个根对象的fact方法，并把#u的解释结果作为参数传入此方法
-         */
-        String value = (String) Ognl.getValue("fact(#u)", context, person);
-        System.out.println(value); //输出是 "暗之幻影,"
-    }
-
-    @Test
-    public void testOgnl_19() throws Exception {
-        Person person = new Person();
-        Map context = new HashMap();
-        User u = new User();
-        u.setUsername("暗之幻影");
-        context.put("u", u);
-
-        /**
-         * 1、先计算表达式fact，得到结果是：username
-         * 2、解释括号中的表达式#u，其结果是user对象
-         * 3、把括号中表达式的结果作为root对象，解释在第一步中得到的结果（即把第一步的结果看成另外一个表达式）
-         */
-        String value = (String) Ognl.getValue("(fact)(#u)", context, person);
-        System.out.println(value); //输出"暗之幻影"
-    }
 
     // ********************* OGNL访问集合元素 **************************//
 
