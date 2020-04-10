@@ -4,15 +4,22 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="快速开始指南 读取 properties 文件 database.properties 是一个配置文件的示例：
+database.host = db.acme.com database.port = 8199 database.user = admin database.password = ??? database.timeout = 60000 zk.addresses = host1,host2,host3 读取这个文件最简单的方式是通过 Configurations 帮助类。 这个类提供了一系列从不同源创建配置对象的方法。读取 properties 代码如下：
+Configurations configs = new Configurations(); URL databaseRes = ClassLoader.getSystemResource(&#34;database.properties&#34;); Configuration config = configs.properties(databaseRes); String dbHost = config.getString(&#34;database.host&#34;); int dbPort = config.getInt(&#34;database.port&#34;); List&lt;String&gt; addresses = config.getList(String.class, &#34;zk.addresses&#34;); Iterator&lt;String&gt; database = config.getKeys(&#34;database&#34;); 读取 XML 文件 paths.xml 文件内容如下:
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;ISO-8859-1&#34; ?&gt; &lt;configuration&gt; &lt;processing stage=&#34;qa&#34;&gt; &lt;paths&gt; &lt;path&gt;/data/path1&lt;/path&gt; &lt;path&gt;/data/otherpath&lt;/path&gt; &lt;path&gt;/var/log&lt;/path&gt; &lt;/paths&gt; &lt;/processing&gt; &lt;/configuration&gt; 读取 xml 配置文件的方式与 properties 文件类似："><meta property="og:title" content="" />
+<meta property="og:description" content="快速开始指南 读取 properties 文件 database.properties 是一个配置文件的示例：
+database.host = db.acme.com database.port = 8199 database.user = admin database.password = ??? database.timeout = 60000 zk.addresses = host1,host2,host3 读取这个文件最简单的方式是通过 Configurations 帮助类。 这个类提供了一系列从不同源创建配置对象的方法。读取 properties 代码如下：
+Configurations configs = new Configurations(); URL databaseRes = ClassLoader.getSystemResource(&#34;database.properties&#34;); Configuration config = configs.properties(databaseRes); String dbHost = config.getString(&#34;database.host&#34;); int dbPort = config.getInt(&#34;database.port&#34;); List&lt;String&gt; addresses = config.getList(String.class, &#34;zk.addresses&#34;); Iterator&lt;String&gt; database = config.getKeys(&#34;database&#34;); 读取 XML 文件 paths.xml 文件内容如下:
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;ISO-8859-1&#34; ?&gt; &lt;configuration&gt; &lt;processing stage=&#34;qa&#34;&gt; &lt;paths&gt; &lt;path&gt;/data/path1&lt;/path&gt; &lt;path&gt;/data/otherpath&lt;/path&gt; &lt;path&gt;/var/log&lt;/path&gt; &lt;/paths&gt; &lt;/processing&gt; &lt;/configuration&gt; 读取 xml 配置文件的方式与 properties 文件类似：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Quick-Start-Guide/" />
+<meta property="article:modified_time" content="2019-09-07T18:48:53+08:00" />
 <title>Quick Start Guide | Apache-Commons</title>
-
-
-<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
-
-
-
-
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
 
 
 <!--
@@ -24,13 +31,14 @@ https://github.com/alex-shpak/hugo-book
 </head>
 
 <body>
-  <input type="checkbox" style="display: none" id="menu-control" />
-  <main class="flex container">
-
-    <aside class="book-menu fixed">
-      <nav>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
 <h2 class="book-brand">
-  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
 </h2>
 
 
@@ -38,41 +46,52 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-    
-  
-  
-  
 
-  <style>
-  nav ul a[href$="\2f Apache-Commons\2f docs\2f Configuration\2fQuick-Start-Guide\2f "] {
-      color: #004ed0;
-  }
-  </style>
 
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
 <ul>
-<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
-<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
-<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
-<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
-</ul></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
 </ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/"class=active>快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
 
 
 
@@ -83,57 +102,79 @@ https://github.com/alex-shpak/hugo-book
 </nav>
 
 
-<script>
-(function() {
-  var menu = document.querySelector("aside.book-menu nav");
-  addEventListener("beforeunload", function(event) {
-    localStorage.setItem("menu.scrollTop", menu.scrollTop);
-  });
-  menu.scrollTop = localStorage.getItem("menu.scrollTop");
-})();
-</script>
 
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
     </aside>
 
     <div class="book-page">
-      <header class="flex align-center justify-between book-header">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
   <label for="menu-control">
-    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
+
   <strong>Quick Start Guide</strong>
-</header>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#快速开始指南">快速开始指南</a>
+      <ul>
+        <li><a href="#读取-properties-文件">读取 properties 文件</a></li>
+        <li><a href="#读取-xml-文件">读取 XML 文件</a></li>
+        <li><a href="#更新配置">更新配置</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
 
       
-<article class="markdown">
-
-<h1 id="快速开始指南">快速开始指南</h1>
-
+      
+  <article class="markdown"><h1 id="快速开始指南">快速开始指南</h1>
 <h2 id="读取-properties-文件">读取 properties 文件</h2>
-
 <p><code>database.properties</code> 是一个配置文件的示例：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-properties" data-lang="properties">database.host = db.acme.com
+<pre><code class="language-properties" data-lang="properties">database.host = db.acme.com
 database.port = 8199
 database.user = admin
 database.password = ???
 database.timeout = 60000
 
-zk.addresses = host1,host2,host3</code></pre></div>
-<p>读取这个文件最简单的方式是通过 <code>Configurations</code> 帮助类。 这个类提供了一系列从不同源创建配置对象的方法。读取 properties 代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations <span style="color:#a6e22e">configs</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations();
+zk.addresses = host1,host2,host3
+</code></pre><p>读取这个文件最简单的方式是通过 <code>Configurations</code> 帮助类。 这个类提供了一系列从不同源创建配置对象的方法。读取 properties 代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations configs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations<span style="color:#f92672">();</span>
 
-URL <span style="color:#a6e22e">databaseRes</span> <span style="color:#f92672">=</span> ClassLoader.<span style="color:#a6e22e">getSystemResource</span>(<span style="color:#e6db74">&#34;database.properties&#34;</span>);
+URL databaseRes <span style="color:#f92672">=</span> ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getSystemResource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database.properties&#34;</span><span style="color:#f92672">);</span>
 
-Configuration <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> configs.<span style="color:#a6e22e">properties</span>(databaseRes);
+Configuration config <span style="color:#f92672">=</span> configs<span style="color:#f92672">.</span><span style="color:#a6e22e">properties</span><span style="color:#f92672">(</span>databaseRes<span style="color:#f92672">);</span>
 
-String <span style="color:#a6e22e">dbHost</span> <span style="color:#f92672">=</span> config.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;database.host&#34;</span>);
+String dbHost <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database.host&#34;</span><span style="color:#f92672">);</span>
 
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dbPort</span> <span style="color:#f92672">=</span> config.<span style="color:#a6e22e">getInt</span>(<span style="color:#e6db74">&#34;database.port&#34;</span>);
+<span style="color:#66d9ef">int</span> dbPort <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span><span style="color:#a6e22e">getInt</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database.port&#34;</span><span style="color:#f92672">);</span>
 
-List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">addresses</span> <span style="color:#f92672">=</span> config.<span style="color:#a6e22e">getList</span>(String.<span style="color:#a6e22e">class</span>, <span style="color:#e6db74">&#34;zk.addresses&#34;</span>);
+List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> addresses <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span><span style="color:#a6e22e">getList</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;zk.addresses&#34;</span><span style="color:#f92672">);</span>
 
-Iterator<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">database</span> <span style="color:#f92672">=</span> config.<span style="color:#a6e22e">getKeys</span>(<span style="color:#e6db74">&#34;database&#34;</span>);</code></pre></div>
-<h2 id="读取-xml-文件">读取 XML 文件</h2>
-
+Iterator<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> database <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span><span style="color:#a6e22e">getKeys</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database&#34;</span><span style="color:#f92672">);</span>
+</code></pre></div><h2 id="读取-xml-文件">读取 XML 文件</h2>
 <p><code>paths.xml</code> 文件内容如下:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;ISO-8859-1&#34; ?&gt;</span>
 <span style="color:#f92672">&lt;configuration&gt;</span>
@@ -144,91 +185,122 @@ Iterator<span style="color:#f92672">&lt;</span>String<span style="color:#f92672"
       <span style="color:#f92672">&lt;path&gt;</span>/var/log<span style="color:#f92672">&lt;/path&gt;</span>
     <span style="color:#f92672">&lt;/paths&gt;</span>
   <span style="color:#f92672">&lt;/processing&gt;</span>
-<span style="color:#f92672">&lt;/configuration&gt;</span></code></pre></div>
-<p>读取 xml 配置文件的方式与 <code>properties</code> 文件类似：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations <span style="color:#a6e22e">configs</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations();
+<span style="color:#f92672">&lt;/configuration&gt;</span>
+</code></pre></div><p>读取 xml 配置文件的方式与 <code>properties</code> 文件类似：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations configs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations<span style="color:#f92672">();</span>
 
-URL <span style="color:#a6e22e">pathsRes</span> <span style="color:#f92672">=</span> ClassLoader.<span style="color:#a6e22e">getSystemResource</span>(<span style="color:#e6db74">&#34;paths.xml&#34;</span>);
+URL pathsRes <span style="color:#f92672">=</span> ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getSystemResource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;paths.xml&#34;</span><span style="color:#f92672">);</span>
 
-XMLConfiguration <span style="color:#a6e22e">xmlConfiguration</span> <span style="color:#f92672">=</span> configs.<span style="color:#a6e22e">xml</span>(pathsRes);
+XMLConfiguration xmlConfiguration <span style="color:#f92672">=</span> configs<span style="color:#f92672">.</span><span style="color:#a6e22e">xml</span><span style="color:#f92672">(</span>pathsRes<span style="color:#f92672">);</span>
 
 <span style="color:#75715e">// qa
-</span><span style="color:#75715e"></span>String <span style="color:#a6e22e">stage</span> <span style="color:#f92672">=</span> xmlConfiguration.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;processing[@stage]&#34;</span>);
+</span><span style="color:#75715e"></span>String stage <span style="color:#f92672">=</span> xmlConfiguration<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;processing[@stage]&#34;</span><span style="color:#f92672">);</span>
 
 <span style="color:#75715e">// size 3
-</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">paths</span> <span style="color:#f92672">=</span> xmlConfiguration.<span style="color:#a6e22e">getList</span>(String.<span style="color:#a6e22e">class</span>, <span style="color:#e6db74">&#34;processing.paths.path&#34;</span>);
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> paths <span style="color:#f92672">=</span> xmlConfiguration<span style="color:#f92672">.</span><span style="color:#a6e22e">getList</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;processing.paths.path&#34;</span><span style="color:#f92672">);</span>
 
 <span style="color:#75715e">// /data/otherpath
-</span><span style="color:#75715e"></span>String <span style="color:#a6e22e">secondPath</span> <span style="color:#f92672">=</span> xmlConfiguration.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;processing.paths.path(1)&#34;</span>);</code></pre></div>
-<blockquote>
-<p><a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_hierarchical.html">Hierarchical Configurations</a></p>
+</span><span style="color:#75715e"></span>String secondPath <span style="color:#f92672">=</span> xmlConfiguration<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;processing.paths.path(1)&#34;</span><span style="color:#f92672">);</span>
+</code></pre></div><blockquote>
+<p>
+  <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_hierarchical.html">Hierarchical Configurations</a></p>
 </blockquote>
-
 <h2 id="更新配置">更新配置</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations <span style="color:#a6e22e">configs</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Configurations configs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations<span style="color:#f92672">();</span>
 
 <span style="color:#75715e">// ..../target/classes/database.properties
-</span><span style="color:#75715e"></span>URL <span style="color:#a6e22e">databaseRes</span> <span style="color:#f92672">=</span> ClassLoader.<span style="color:#a6e22e">getSystemResource</span>(<span style="color:#e6db74">&#34;database.properties&#34;</span>);
+</span><span style="color:#75715e"></span>URL databaseRes <span style="color:#f92672">=</span> ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getSystemResource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database.properties&#34;</span><span style="color:#f92672">);</span>
 
-FileBasedConfigurationBuilder<span style="color:#f92672">&lt;</span>PropertiesConfiguration<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">configurationBuilder</span> <span style="color:#f92672">=</span> configs.<span style="color:#a6e22e">propertiesBuilder</span>(databaseRes);
+FileBasedConfigurationBuilder<span style="color:#f92672">&lt;</span>PropertiesConfiguration<span style="color:#f92672">&gt;</span> configurationBuilder <span style="color:#f92672">=</span> configs<span style="color:#f92672">.</span><span style="color:#a6e22e">propertiesBuilder</span><span style="color:#f92672">(</span>databaseRes<span style="color:#f92672">);</span>
 
-PropertiesConfiguration <span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> configurationBuilder.<span style="color:#a6e22e">getConfiguration</span>();
+PropertiesConfiguration config <span style="color:#f92672">=</span> configurationBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">getConfiguration</span><span style="color:#f92672">();</span>
 
-config.<span style="color:#a6e22e">setProperty</span>(<span style="color:#e6db74">&#34;database.password&#34;</span>, 1723);
+config<span style="color:#f92672">.</span><span style="color:#a6e22e">setProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;database.password&#34;</span><span style="color:#f92672">,</span> 1723<span style="color:#f92672">);</span>
 
-config.<span style="color:#a6e22e">addProperty</span>(<span style="color:#e6db74">&#34;zk.addresses&#34;</span>, <span style="color:#e6db74">&#34;new-zk2&#34;</span>);
+config<span style="color:#f92672">.</span><span style="color:#a6e22e">addProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;zk.addresses&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;new-zk2&#34;</span><span style="color:#f92672">);</span>
 
-configurationBuilder.<span style="color:#a6e22e">save</span>();</code></pre></div>
-<blockquote>
-<p><a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_builders.html#Configuration_Builders">Configuration Builders</a></p>
+configurationBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">save</span><span style="color:#f92672">();</span>
+</code></pre></div><blockquote>
+<p>
+  <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_builders.html#Configuration_Builders">Configuration Builders</a></p>
 </blockquote>
 </article>
-
+ 
       
-<div class="book-footer justify-between">
-  
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
   <div>
     
-    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified by kaibin.yang | Sep 7, 2019' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Sep 7, 2019</span>
     </a>
   </div>
-  
-  
+
+
+
   <div>
-    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Configuration/Quick-Start-Guide.md" target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Configuration/Quick-Start-Guide.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
     </a>
   </div>
-  
+
 </div>
 
+ 
+        
+      </footer>
 
       
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
     </div>
 
     
-  
-
-  <aside class="book-toc level-3 fixed">
-    <nav id="TableOfContents">
-<ul>
-<li><a href="#快速开始指南">快速开始指南</a>
-<ul>
-<li><a href="#读取-properties-文件">读取 properties 文件</a></li>
-<li><a href="#读取-xml-文件">读取 XML 文件</a></li>
-<li><a href="#更新配置">更新配置</a></li>
-</ul></li>
-</ul>
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#快速开始指南">快速开始指南</a>
+      <ul>
+        <li><a href="#读取-properties-文件">读取 properties 文件</a></li>
+        <li><a href="#读取-xml-文件">读取 XML 文件</a></li>
+        <li><a href="#更新配置">更新配置</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
-  </aside>
 
-
-
+ 
+    </aside>
+    
   </main>
-  
-  
+
   
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

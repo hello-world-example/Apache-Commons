@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Apache-Commons</title>
@@ -16,9 +16,7 @@
       
       <guid>https://hello-world-example.github.io/Apache-Commons/docs/Compress/tar/</guid>
       <description>tar 工具类 对应的 Linxu tar 命令：
- tar cf &amp;lt;file.tar&amp;gt; &amp;lt;file&amp;gt; 将由文件 &amp;lt;file&amp;gt; 创建名为&amp;lt;file.tar&amp;gt;归档文件，同时保留原文件  如果加上参数 z 则归档之后会进行 gzip 压缩（*.tar.gz）  tar xf &amp;lt;file.tar&amp;gt; 将由归档文件&amp;lt;file.tar&amp;gt;创建名为&amp;lt;file&amp;gt;的文件/目录，同时保留原文件
- 如果加上参数 z 则解归档之前会进行解压缩（*.tar.gz）
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry; import org.apache.commons.compress.archivers.tar.TarArchiveInputStream; import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream; import java.io.*; public abstract class TarUtil { private static final String BASE_DIR = &amp;#34;&amp;#34;; // 符号&amp;#34;/&amp;#34;用来作为目录标识判断符 private static final String PATH_SPLITOR = &amp;#34;/&amp;#34;; private static final int BUFFER = 1024; private static final String EXT = &amp;#34;.</description>
+ tar cf &amp;lt;file.tar&amp;gt; &amp;lt;file&amp;gt; 将由文件 &amp;lt;file&amp;gt; 创建名为&amp;lt;file.tar&amp;gt;归档文件，同时保留原文件  如果加上参数 z 则归档之后会进行 gzip 压缩（*.tar.gz）   tar xf &amp;lt;file.tar&amp;gt; 将由归档文件&amp;lt;file.tar&amp;gt;创建名为&amp;lt;file&amp;gt;的文件/目录，同时保留原文件  如果加上参数 z 则解归档之前会进行解压缩（*.tar.gz）    import org.apache.commons.compress.archivers.tar.TarArchiveEntry; import org.apache.commons.compress.archivers.tar.TarArchiveInputStream; import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream; import java.io.*; public abstract class TarUtil { private static final String BASE_DIR = &amp;#34;&amp;#34;; // 符号&amp;#34;/&amp;#34;用来作为目录标识判断符  private static final String PATH_SPLITOR = &amp;#34;/&amp;#34;; private static final int BUFFER = 1024; private static final String EXT = &amp;#34;.</description>
     </item>
     
   </channel>

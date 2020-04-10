@@ -4,15 +4,18 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="tar 工具类 对应的 Linxu tar 命令：
+ tar cf &lt;file.tar&gt; &lt;file&gt; 将由文件 &lt;file&gt; 创建名为&lt;file.tar&gt;归档文件，同时保留原文件  如果加上参数 z 则归档之后会进行 gzip 压缩（*.tar.gz）   tar xf &lt;file.tar&gt; 将由归档文件&lt;file.tar&gt;创建名为&lt;file&gt;的文件/目录，同时保留原文件  如果加上参数 z 则解归档之前会进行解压缩（*.tar.gz）    import org.apache.commons.compress.archivers.tar.TarArchiveEntry; import org.apache.commons.compress.archivers.tar.TarArchiveInputStream; import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream; import java.io.*; public abstract class TarUtil { private static final String BASE_DIR = &#34;&#34;; // 符号&#34;/&#34;用来作为目录标识判断符  private static final String PATH_SPLITOR = &#34;/&#34;; private static final int BUFFER = 1024; private static final String EXT = &#34;."><meta property="og:title" content="" />
+<meta property="og:description" content="tar 工具类 对应的 Linxu tar 命令：
+ tar cf &lt;file.tar&gt; &lt;file&gt; 将由文件 &lt;file&gt; 创建名为&lt;file.tar&gt;归档文件，同时保留原文件  如果加上参数 z 则归档之后会进行 gzip 压缩（*.tar.gz）   tar xf &lt;file.tar&gt; 将由归档文件&lt;file.tar&gt;创建名为&lt;file&gt;的文件/目录，同时保留原文件  如果加上参数 z 则解归档之前会进行解压缩（*.tar.gz）    import org.apache.commons.compress.archivers.tar.TarArchiveEntry; import org.apache.commons.compress.archivers.tar.TarArchiveInputStream; import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream; import java.io.*; public abstract class TarUtil { private static final String BASE_DIR = &#34;&#34;; // 符号&#34;/&#34;用来作为目录标识判断符  private static final String PATH_SPLITOR = &#34;/&#34;; private static final int BUFFER = 1024; private static final String EXT = &#34;." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/Compress/tar/" />
+<meta property="article:modified_time" content="2019-09-07T18:48:53+08:00" />
 <title>Tar | Apache-Commons</title>
-
-
-<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
-
-
-
-
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
 
 
 <!--
@@ -24,13 +27,14 @@ https://github.com/alex-shpak/hugo-book
 </head>
 
 <body>
-  <input type="checkbox" style="display: none" id="menu-control" />
-  <main class="flex container">
-
-    <aside class="book-menu fixed">
-      <nav>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
 <h2 class="book-brand">
-  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
 </h2>
 
 
@@ -38,41 +42,52 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-    
-  
-  
-  
 
-  <style>
-  nav ul a[href$="\2f Apache-Commons\2f docs\2f Compress\2ftar\2f "] {
-      color: #004ed0;
-  }
-  </style>
 
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
 <ul>
-<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
-<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
-<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
-<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
-</ul></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/"class=active>TarUtil</a></li>
 </ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
 
 
 
@@ -83,355 +98,390 @@ https://github.com/alex-shpak/hugo-book
 </nav>
 
 
-<script>
-(function() {
-  var menu = document.querySelector("aside.book-menu nav");
-  addEventListener("beforeunload", function(event) {
-    localStorage.setItem("menu.scrollTop", menu.scrollTop);
-  });
-  menu.scrollTop = localStorage.getItem("menu.scrollTop");
-})();
-</script>
 
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
     </aside>
 
     <div class="book-page">
-      <header class="flex align-center justify-between book-header">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
   <label for="menu-control">
-    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
+
   <strong>Tar</strong>
-</header>
 
-      
-<article class="markdown">
-
-<h1 id="tar-工具类">tar 工具类</h1>
-
-<p>对应的 Linxu <code>tar</code> 命令：</p>
-
-<ul>
-<li><code>tar cf &lt;file.tar&gt; &lt;file&gt;</code> 将由文件 <code>&lt;file&gt;</code> 创建名为<code>&lt;file.tar&gt;</code>归档文件，同时保留原文件
-
-<ul>
-<li>如果加上参数 <code>z</code> 则归档之后会进行 gzip 压缩（<code>*.tar.gz</code>）</li>
-</ul></li>
-
-<li><p><code>tar xf &lt;file.tar&gt;</code> 将由归档文件<code>&lt;file.tar&gt;</code>创建名为<code>&lt;file&gt;</code>的文件/目录，同时保留原文件</p>
-
-<ul>
-<li><p>如果加上参数 <code>z</code> 则解归档之前会进行解压缩（<code>*.tar.gz</code>）</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">compress</span>.<span style="color:#a6e22e">archivers</span>.<span style="color:#a6e22e">tar</span>.<span style="color:#a6e22e">TarArchiveEntry</span>;
-<span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">compress</span>.<span style="color:#a6e22e">archivers</span>.<span style="color:#a6e22e">tar</span>.<span style="color:#a6e22e">TarArchiveInputStream</span>;
-<span style="color:#f92672">import</span> <span style="color:#a6e22e">org</span>.<span style="color:#a6e22e">apache</span>.<span style="color:#a6e22e">commons</span>.<span style="color:#a6e22e">compress</span>.<span style="color:#a6e22e">archivers</span>.<span style="color:#a6e22e">tar</span>.<span style="color:#a6e22e">TarArchiveOutputStream</span>;
-
-<span style="color:#f92672">import</span> <span style="color:#a6e22e">java</span>.<span style="color:#a6e22e">io</span>.<span style="color:#f92672">*</span>;
-
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TarUtil</span> {
-
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">final</span> <span style="color:#a6e22e">String</span> BASE_DIR <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
-
-<span style="color:#75715e">// 符号&#34;/&#34;用来作为目录标识判断符  
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">final</span> <span style="color:#a6e22e">String</span> PATH_SPLITOR <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/&#34;</span>;
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">final</span> <span style="color:#a6e22e">int</span> BUFFER <span style="color:#f92672">=</span> 1024;
-
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">final</span> <span style="color:#a6e22e">String</span> EXT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;.tar&#34;</span>;
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(String <span style="color:#a6e22e">srcPath</span>, String <span style="color:#a6e22e">destPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-File <span style="color:#a6e22e">srcFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File(srcPath);
-archive(srcFile, destPath);
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档文件
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(File <span style="color:#a6e22e">srcFile</span>, String <span style="color:#a6e22e">destPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-archive(srcFile, <span style="color:#66d9ef">new</span> File(destPath));
-}
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(String <span style="color:#a6e22e">srcPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-archive(<span style="color:#66d9ef">new</span> File(srcPath));
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(File <span style="color:#a6e22e">srcFile</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-String <span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> srcFile.<span style="color:#a6e22e">getName</span>();
-String <span style="color:#a6e22e">basePath</span> <span style="color:#f92672">=</span> srcFile.<span style="color:#a6e22e">getParent</span>();
-String <span style="color:#a6e22e">destPath</span> <span style="color:#f92672">=</span> basePath <span style="color:#f92672">+</span> File.<span style="color:#a6e22e">separator</span> <span style="color:#f92672">+</span> name <span style="color:#f92672">+</span> EXT;
-archive(srcFile, destPath);
-}
-
-
-<span style="color:#75715e">/* ************************************************************************************************************
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">* *************************************************************************************************************/</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param srcFile  源路径
-</span><span style="color:#75715e">* @param destFile 目标路径
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(File <span style="color:#a6e22e">srcFile</span>, File <span style="color:#a6e22e">destFile</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-<span style="color:#66d9ef">try</span> (FileOutputStream <span style="color:#a6e22e">fileOutputStream</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileOutputStream(destFile)) {
-    <span style="color:#66d9ef">try</span> (TarArchiveOutputStream <span style="color:#a6e22e">taos</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveOutputStream(fileOutputStream)) {
-        archive(srcFile, taos, BASE_DIR);
-    }
-}
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param srcFile  源路径
-</span><span style="color:#75715e">* @param taos     TarArchiveOutputStream
-</span><span style="color:#75715e">* @param basePath 归档包内相对路径
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span>(File <span style="color:#a6e22e">srcFile</span>, TarArchiveOutputStream <span style="color:#a6e22e">taos</span>, String <span style="color:#a6e22e">basePath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-<span style="color:#66d9ef">if</span> (srcFile.<span style="color:#a6e22e">isDirectory</span>()) {
-    archiveDir(srcFile, taos, basePath);
-} <span style="color:#66d9ef">else</span> {
-    archiveFile(srcFile, taos, basePath);
-}
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 目录归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archiveDir</span>(File <span style="color:#a6e22e">dir</span>, TarArchiveOutputStream <span style="color:#a6e22e">taos</span>, String <span style="color:#a6e22e">basePath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-
-File[] <span style="color:#a6e22e">files</span> <span style="color:#f92672">=</span> dir.<span style="color:#a6e22e">listFiles</span>();
-
-<span style="color:#66d9ef">if</span> (files.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 1) {
-    TarArchiveEntry <span style="color:#a6e22e">entry</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveEntry(basePath <span style="color:#f92672">+</span> dir.<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> PATH_SPLITOR);
-
-    taos.<span style="color:#a6e22e">putArchiveEntry</span>(entry);
-    taos.<span style="color:#a6e22e">closeArchiveEntry</span>();
-}
-
-<span style="color:#66d9ef">for</span> (File <span style="color:#a6e22e">file</span> <span style="color:#f92672">:</span> files) {
-    <span style="color:#75715e">// 递归归档
-</span><span style="color:#75715e"></span>    archive(file, taos, basePath <span style="color:#f92672">+</span> dir.<span style="color:#a6e22e">getName</span>() <span style="color:#f92672">+</span> PATH_SPLITOR);
-
-}
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 数据归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param data 待归档数据
-</span><span style="color:#75715e">* @param path 归档数据的当前路径
-</span><span style="color:#75715e">* @param name 归档文件名
-</span><span style="color:#75715e">* @param taos TarArchiveOutputStream
-</span><span style="color:#75715e">* @throws Exception
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archiveFile</span>(File <span style="color:#a6e22e">file</span>, TarArchiveOutputStream <span style="color:#a6e22e">taos</span>, String <span style="color:#a6e22e">dir</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * 归档内文件名定义 
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * &lt;pre&gt; 
-</span><span style="color:#75715e"> * 如果有多级目录，那么这里就需要给出包含目录的文件名 
-</span><span style="color:#75715e"> * 如果用WinRAR打开归档包，中文名将显示为乱码 
-</span><span style="color:#75715e"> * &lt;/pre&gt; 
-</span><span style="color:#75715e"> */</span>
-TarArchiveEntry <span style="color:#a6e22e">entry</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveEntry(dir <span style="color:#f92672">+</span> file.<span style="color:#a6e22e">getName</span>());
-
-entry.<span style="color:#a6e22e">setSize</span>(file.<span style="color:#a6e22e">length</span>());
-
-taos.<span style="color:#a6e22e">putArchiveEntry</span>(entry);
-
-BufferedInputStream <span style="color:#a6e22e">bis</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedInputStream(<span style="color:#66d9ef">new</span> FileInputStream(
-        file));
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span>;
-<span style="color:#66d9ef">byte</span> <span style="color:#a6e22e">data</span>[] <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span>[BUFFER];
-<span style="color:#66d9ef">while</span> ((count <span style="color:#f92672">=</span> bis.<span style="color:#a6e22e">read</span>(data, 0, BUFFER)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1) {
-    taos.<span style="color:#a6e22e">write</span>(data, 0, count);
-}
-
-bis.<span style="color:#a6e22e">close</span>();
-
-taos.<span style="color:#a6e22e">closeArchiveEntry</span>();
-}
-
-<span style="color:#75715e">/* ************************************************************************************************************
-</span><span style="color:#75715e">* 解归档
-</span><span style="color:#75715e">* *************************************************************************************************************/</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 文件 解归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param srcPath 源文件路径
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(String <span style="color:#a6e22e">srcPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-dearchive(<span style="color:#66d9ef">new</span> File(srcPath));
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 解归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(File <span style="color:#a6e22e">srcFile</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-String <span style="color:#a6e22e">basePath</span> <span style="color:#f92672">=</span> srcFile.<span style="color:#a6e22e">getParent</span>();
-dearchive(srcFile, basePath);
-}
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 文件 解归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param srcPath  源文件路径
-</span><span style="color:#75715e">* @param destPath 目标文件路径
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(String <span style="color:#a6e22e">srcPath</span>, String <span style="color:#a6e22e">destPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-File <span style="color:#a6e22e">srcFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File(srcPath);
-dearchive(srcFile, destPath);
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 解归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(File <span style="color:#a6e22e">srcFile</span>, String <span style="color:#a6e22e">destPath</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-dearchive(srcFile, <span style="color:#66d9ef">new</span> File(destPath));
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 解归档
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(File <span style="color:#a6e22e">srcFile</span>, File <span style="color:#a6e22e">destFile</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-
-<span style="color:#66d9ef">try</span> (FileInputStream <span style="color:#a6e22e">fileInputStream</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream(srcFile)) {
-    <span style="color:#66d9ef">try</span> (TarArchiveInputStream <span style="color:#a6e22e">tais</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveInputStream(fileInputStream)) {
-        dearchive(destFile, tais);
-    }
-}
-
-}
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 文件 解归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param destFile 目标文件
-</span><span style="color:#75715e">* @param tais     ZipInputStream
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span>(File <span style="color:#a6e22e">destFile</span>, TarArchiveInputStream <span style="color:#a6e22e">tais</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-
-TarArchiveEntry <span style="color:#a6e22e">entry</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
-<span style="color:#66d9ef">while</span> ((entry <span style="color:#f92672">=</span> tais.<span style="color:#a6e22e">getNextTarEntry</span>()) <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
-
-    <span style="color:#75715e">// 文件  
-</span><span style="color:#75715e"></span>    String <span style="color:#a6e22e">dir</span> <span style="color:#f92672">=</span> destFile.<span style="color:#a6e22e">getPath</span>() <span style="color:#f92672">+</span> File.<span style="color:#a6e22e">separator</span> <span style="color:#f92672">+</span> entry.<span style="color:#a6e22e">getName</span>();
-
-    File <span style="color:#a6e22e">dirFile</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File(dir);
-
-    <span style="color:#75715e">// 文件检查  
-</span><span style="color:#75715e"></span>    fileProber(dirFile);
-
-    <span style="color:#66d9ef">if</span> (entry.<span style="color:#a6e22e">isDirectory</span>()) {
-        dirFile.<span style="color:#a6e22e">mkdirs</span>();
-    } <span style="color:#66d9ef">else</span> {
-        dearchiveFile(dirFile, tais);
-    }
-
-}
-}
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 文件解归档
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* @param destFile 目标文件
-</span><span style="color:#75715e">* @param tais     TarArchiveInputStream
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchiveFile</span>(File <span style="color:#a6e22e">destFile</span>, TarArchiveInputStream <span style="color:#a6e22e">tais</span>) <span style="color:#66d9ef">throws</span> <span style="color:#a6e22e">IOException</span> {
-
-BufferedOutputStream <span style="color:#a6e22e">bos</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream(<span style="color:#66d9ef">new</span> FileOutputStream(destFile));
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span>;
-<span style="color:#66d9ef">byte</span> <span style="color:#a6e22e">data</span>[] <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span>[BUFFER];
-<span style="color:#66d9ef">while</span> ((count <span style="color:#f92672">=</span> tais.<span style="color:#a6e22e">read</span>(data, 0, BUFFER)) <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1) {
-    bos.<span style="color:#a6e22e">write</span>(data, 0, count);
-}
-
-bos.<span style="color:#a6e22e">close</span>();
-}
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e">* 文件探针
-</span><span style="color:#75715e">*
-</span><span style="color:#75715e">* &lt;pre&gt;
-</span><span style="color:#75715e">* 当父目录不存在时，创建目录！
-</span><span style="color:#75715e">* &lt;/pre&gt;
-</span><span style="color:#75715e">*/</span>
-<span style="color:#66d9ef">private</span> <span style="color:#a6e22e">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fileProber</span>(File <span style="color:#a6e22e">dirFile</span>) {
-
-File <span style="color:#a6e22e">parentFile</span> <span style="color:#f92672">=</span> dirFile.<span style="color:#a6e22e">getParentFile</span>();
-<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>parentFile.<span style="color:#a6e22e">exists</span>()) {
-
-    <span style="color:#75715e">// 递归寻找上级目录  
-</span><span style="color:#75715e"></span>    fileProber(parentFile);
-
-    parentFile.<span style="color:#a6e22e">mkdir</span>();
-}
-
-}
-
-}  </code></pre></div></li>
-</ul></li>
-</ul>
-
-<h2 id="read-more">Read More</h2>
-
-<blockquote>
-<ul>
-<li><p>代码来自：<a href="https://snowolf.iteye.com/blog/648652">Java压缩技术（七） TAR——Commons实现</a></p></li>
-
-<li><p><a href="https://snowolf.iteye.com/blog/643010">Java压缩技术（四） GZIP——Java原生实现</a></p></li>
-</ul>
-</blockquote>
-</article>
-
-      
-<div class="book-footer justify-between">
-  
-  <div>
-    
-    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
-    </a>
-  </div>
-  
-  
-  <div>
-    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Compress/tar.md" target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
-    </a>
-  </div>
-  
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
 </div>
 
 
+  
+ 
+      </header>
+
       
+      
+  <article class="markdown"><h1 id="tar-工具类">tar 工具类</h1>
+<p>对应的 Linxu <code>tar</code> 命令：</p>
+<ul>
+<li><code>tar cf &lt;file.tar&gt; &lt;file&gt;</code> 将由文件 <code>&lt;file&gt;</code> 创建名为<code>&lt;file.tar&gt;</code>归档文件，同时保留原文件
+<ul>
+<li>如果加上参数 <code>z</code> 则归档之后会进行 gzip 压缩（<code>*.tar.gz</code>）</li>
+</ul>
+</li>
+<li><code>tar xf &lt;file.tar&gt;</code> 将由归档文件<code>&lt;file.tar&gt;</code>创建名为<code>&lt;file&gt;</code>的文件/目录，同时保留原文件
+<ul>
+<li>如果加上参数 <code>z</code> 则解归档之前会进行解压缩（<code>*.tar.gz</code>）</li>
+</ul>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
+<span style="color:#f92672">import</span> org.apache.commons.compress.archivers.tar.TarArchiveEntry<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> org.apache.commons.compress.archivers.tar.TarArchiveInputStream<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> org.apache.commons.compress.archivers.tar.TarArchiveOutputStream<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.io.*<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TarUtil</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String BASE_DIR <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">// 符号&#34;/&#34;用来作为目录标识判断符  
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String PATH_SPLITOR <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> BUFFER <span style="color:#f92672">=</span> 1024<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String EXT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;.tar&#34;</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>String srcPath<span style="color:#f92672">,</span> String destPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        File srcFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>srcPath<span style="color:#f92672">);</span>
+        archive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> destPath<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档文件
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">,</span> String destPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        archive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>destPath<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>String srcPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        archive<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>srcPath<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        String name <span style="color:#f92672">=</span> srcFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+        String basePath <span style="color:#f92672">=</span> srcFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getParent</span><span style="color:#f92672">();</span>
+        String destPath <span style="color:#f92672">=</span> basePath <span style="color:#f92672">+</span> File<span style="color:#f92672">.</span><span style="color:#a6e22e">separator</span> <span style="color:#f92672">+</span> name <span style="color:#f92672">+</span> EXT<span style="color:#f92672">;</span>
+        archive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> destPath<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#75715e">/* ************************************************************************************************************
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     * *************************************************************************************************************/</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param srcFile  源路径
+</span><span style="color:#75715e">     * @param destFile 目标路径
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">,</span> File destFile<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>FileOutputStream fileOutputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span>destFile<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>TarArchiveOutputStream taos <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveOutputStream<span style="color:#f92672">(</span>fileOutputStream<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                archive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> taos<span style="color:#f92672">,</span> BASE_DIR<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param srcFile  源路径
+</span><span style="color:#75715e">     * @param taos     TarArchiveOutputStream
+</span><span style="color:#75715e">     * @param basePath 归档包内相对路径
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">,</span> TarArchiveOutputStream taos<span style="color:#f92672">,</span> String basePath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>srcFile<span style="color:#f92672">.</span><span style="color:#a6e22e">isDirectory</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            archiveDir<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> taos<span style="color:#f92672">,</span> basePath<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            archiveFile<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> taos<span style="color:#f92672">,</span> basePath<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 目录归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archiveDir</span><span style="color:#f92672">(</span>File dir<span style="color:#f92672">,</span> TarArchiveOutputStream taos<span style="color:#f92672">,</span> String basePath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+
+        File<span style="color:#f92672">[]</span> files <span style="color:#f92672">=</span> dir<span style="color:#f92672">.</span><span style="color:#a6e22e">listFiles</span><span style="color:#f92672">();</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>files<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            TarArchiveEntry entry <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveEntry<span style="color:#f92672">(</span>basePath <span style="color:#f92672">+</span> dir<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> PATH_SPLITOR<span style="color:#f92672">);</span>
+
+            taos<span style="color:#f92672">.</span><span style="color:#a6e22e">putArchiveEntry</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+            taos<span style="color:#f92672">.</span><span style="color:#a6e22e">closeArchiveEntry</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>File file <span style="color:#f92672">:</span> files<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 递归归档
+</span><span style="color:#75715e"></span>            archive<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> taos<span style="color:#f92672">,</span> basePath <span style="color:#f92672">+</span> dir<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> PATH_SPLITOR<span style="color:#f92672">);</span>
+
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 数据归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param data 待归档数据
+</span><span style="color:#75715e">     * @param path 归档数据的当前路径
+</span><span style="color:#75715e">     * @param name 归档文件名
+</span><span style="color:#75715e">     * @param taos TarArchiveOutputStream
+</span><span style="color:#75715e">     * @throws Exception
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">archiveFile</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">,</span> TarArchiveOutputStream taos<span style="color:#f92672">,</span> String dir<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * 归档内文件名定义 
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * &lt;pre&gt; 
+</span><span style="color:#75715e">         * 如果有多级目录，那么这里就需要给出包含目录的文件名 
+</span><span style="color:#75715e">         * 如果用WinRAR打开归档包，中文名将显示为乱码 
+</span><span style="color:#75715e">         * &lt;/pre&gt; 
+</span><span style="color:#75715e">         */</span>
+        TarArchiveEntry entry <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveEntry<span style="color:#f92672">(</span>dir <span style="color:#f92672">+</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+
+        entry<span style="color:#f92672">.</span><span style="color:#a6e22e">setSize</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">());</span>
+
+        taos<span style="color:#f92672">.</span><span style="color:#a6e22e">putArchiveEntry</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+
+        BufferedInputStream bis <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedInputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span>
+                file<span style="color:#f92672">));</span>
+        <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">byte</span> data<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>BUFFER<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>count <span style="color:#f92672">=</span> bis<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>data<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> BUFFER<span style="color:#f92672">))</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            taos<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>data<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        bis<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+
+        taos<span style="color:#f92672">.</span><span style="color:#a6e22e">closeArchiveEntry</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/* ************************************************************************************************************
+</span><span style="color:#75715e">     * 解归档
+</span><span style="color:#75715e">     * *************************************************************************************************************/</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 文件 解归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param srcPath 源文件路径
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>String srcPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        dearchive<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>srcPath<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 解归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        String basePath <span style="color:#f92672">=</span> srcFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getParent</span><span style="color:#f92672">();</span>
+        dearchive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> basePath<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 文件 解归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param srcPath  源文件路径
+</span><span style="color:#75715e">     * @param destPath 目标文件路径
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>String srcPath<span style="color:#f92672">,</span> String destPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        File srcFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>srcPath<span style="color:#f92672">);</span>
+        dearchive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> destPath<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 解归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">,</span> String destPath<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        dearchive<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>destPath<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 解归档
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>File srcFile<span style="color:#f92672">,</span> File destFile<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>FileInputStream fileInputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span>srcFile<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>TarArchiveInputStream tais <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TarArchiveInputStream<span style="color:#f92672">(</span>fileInputStream<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                dearchive<span style="color:#f92672">(</span>destFile<span style="color:#f92672">,</span> tais<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 文件 解归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param destFile 目标文件
+</span><span style="color:#75715e">     * @param tais     ZipInputStream
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchive</span><span style="color:#f92672">(</span>File destFile<span style="color:#f92672">,</span> TarArchiveInputStream tais<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+
+        TarArchiveEntry entry <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>entry <span style="color:#f92672">=</span> tais<span style="color:#f92672">.</span><span style="color:#a6e22e">getNextTarEntry</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+            <span style="color:#75715e">// 文件  
+</span><span style="color:#75715e"></span>            String dir <span style="color:#f92672">=</span> destFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> File<span style="color:#f92672">.</span><span style="color:#a6e22e">separator</span> <span style="color:#f92672">+</span> entry<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+
+            File dirFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>dir<span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// 文件检查  
+</span><span style="color:#75715e"></span>            fileProber<span style="color:#f92672">(</span>dirFile<span style="color:#f92672">);</span>
+
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">isDirectory</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                dirFile<span style="color:#f92672">.</span><span style="color:#a6e22e">mkdirs</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                dearchiveFile<span style="color:#f92672">(</span>dirFile<span style="color:#f92672">,</span> tais<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 文件解归档
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param destFile 目标文件
+</span><span style="color:#75715e">     * @param tais     TarArchiveInputStream
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dearchiveFile</span><span style="color:#f92672">(</span>File destFile<span style="color:#f92672">,</span> TarArchiveInputStream tais<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+
+        BufferedOutputStream bos <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span>destFile<span style="color:#f92672">));</span>
+
+        <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">byte</span> data<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>BUFFER<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>count <span style="color:#f92672">=</span> tais<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>data<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> BUFFER<span style="color:#f92672">))</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            bos<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>data<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        bos<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 文件探针
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * &lt;pre&gt;
+</span><span style="color:#75715e">     * 当父目录不存在时，创建目录！
+</span><span style="color:#75715e">     * &lt;/pre&gt;
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fileProber</span><span style="color:#f92672">(</span>File dirFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        File parentFile <span style="color:#f92672">=</span> dirFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getParentFile</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>parentFile<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+
+            <span style="color:#75715e">// 递归寻找上级目录  
+</span><span style="color:#75715e"></span>            fileProber<span style="color:#f92672">(</span>parentFile<span style="color:#f92672">);</span>
+
+            parentFile<span style="color:#f92672">.</span><span style="color:#a6e22e">mkdir</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>  
+
+</code></pre></div><h2 id="read-more">Read More</h2>
+<blockquote>
+<ul>
+<li>
+<p>代码来自：
+  <a href="https://snowolf.iteye.com/blog/648652">Java压缩技术（七） TAR——Commons实现</a></p>
+</li>
+<li>
+<p>
+  <a href="https://snowolf.iteye.com/blog/643010">Java压缩技术（四） GZIP——Java原生实现</a></p>
+</li>
+</ul>
+</blockquote>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified by kaibin.yang | Sep 7, 2019' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Sep 7, 2019</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Compress/tar.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
     </div>
 
     
-  
-
-
-
   </main>
-  
-  
+
   
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,15 +4,17 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="commons-codec Maven 依赖 &lt;dependency&gt; &lt;groupId&gt;commons-codec&lt;/groupId&gt; &lt;artifactId&gt;commons-codec&lt;/artifactId&gt; &lt;version&gt;1.11&lt;/version&gt; &lt;/dependency&gt; 简介 Codec 是一个简单的工具包，用来编码和解码文本和二进制数据。
+二进制编码器  Base32	Provides Base32 encoding and decoding as defined by RFC 4648 Base32InputStream	Provides Base32 encoding and decoding in a streaming fashion (unlimited size). Base64	提供由RFC 2045定义的Base64编码和解码 Base64InputStream	Provides Base64 encoding and decoding in a streaming fashion (unlimited size). BinaryCodec	Conrts between byte arrays and strings of &ldquo;0&quot;s and &ldquo;1&quot;s. Hex: byte[] 和 字符串 互转 工具类  摘要编码器  DigestUtils	简化常见的MessageDigest操作，并提供GNU libc crypt(3) 兼容的密码散列函数  Language Encoders  Caverphone 1."><meta property="og:title" content="" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/Codec/" />
+
 <title>Codec | Apache-Commons</title>
-
-
-<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
-
-
-
-
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
 
 
 <link rel="alternate" type="application/rss+xml" href="https://hello-world-example.github.io/Apache-Commons/docs/Codec/index.xml" title="Apache-Commons" />
@@ -25,13 +27,14 @@ https://github.com/alex-shpak/hugo-book
 </head>
 
 <body>
-  <input type="checkbox" style="display: none" id="menu-control" />
-  <main class="flex container">
-
-    <aside class="book-menu fixed">
-      <nav>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
 <h2 class="book-brand">
-  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
 </h2>
 
 
@@ -39,41 +42,52 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-    
-  
-  
-  
 
-  <style>
-  nav ul a[href$="\2f Apache-Commons\2f docs\2f Codec\2f "] {
-      color: #004ed0;
-  }
-  </style>
 
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"class=active><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
 <ul>
-<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
-<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
-<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
-<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
-</ul></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
 </ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
 
 
 
@@ -84,135 +98,183 @@ https://github.com/alex-shpak/hugo-book
 </nav>
 
 
-<script>
-(function() {
-  var menu = document.querySelector("aside.book-menu nav");
-  addEventListener("beforeunload", function(event) {
-    localStorage.setItem("menu.scrollTop", menu.scrollTop);
-  });
-  menu.scrollTop = localStorage.getItem("menu.scrollTop");
-})();
-</script>
 
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
     </aside>
 
     <div class="book-page">
-      <header class="flex align-center justify-between book-header">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
   <label for="menu-control">
-    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
+
   <strong>Codec</strong>
-</header>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#commons-codec">commons-codec</a>
+      <ul>
+        <li><a href="#maven-依赖">Maven 依赖</a></li>
+        <li><a href="#简介">简介</a></li>
+        <li><a href="#二进制编码器">二进制编码器</a></li>
+        <li><a href="#摘要编码器">摘要编码器</a></li>
+        <li><a href="#language-encoders">Language Encoders</a></li>
+        <li><a href="#network-encoders">Network Encoders</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
 
       
-<article class="markdown">
-
-<h1 id="commons-codec">commons-codec</h1>
-
+      
+  <article class="markdown"><h1 id="commons-codec">commons-codec</h1>
 <h2 id="maven-依赖">Maven 依赖</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
    <span style="color:#f92672">&lt;groupId&gt;</span>commons-codec<span style="color:#f92672">&lt;/groupId&gt;</span>
    <span style="color:#f92672">&lt;artifactId&gt;</span>commons-codec<span style="color:#f92672">&lt;/artifactId&gt;</span>
    <span style="color:#f92672">&lt;version&gt;</span>1.11<span style="color:#f92672">&lt;/version&gt;</span>
-<span style="color:#f92672">&lt;/dependency&gt;</span></code></pre></div>
-<h2 id="简介">简介</h2>
-
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><h2 id="简介">简介</h2>
 <p>Codec 是一个简单的工具包，用来<strong>编码和解码文本和二进制数据</strong>。</p>
-
 <h2 id="二进制编码器">二进制编码器</h2>
-
 <ul>
-<li><code>Base32</code>  Provides Base32 encoding and decoding as defined by RFC 4648</li>
-<li><code>Base32InputStream</code>   Provides Base32 encoding and decoding in a streaming fashion (unlimited size).</li>
-<li><strong><code>Base64</code></strong>  提供由RFC 2045定义的Base64编码和解码</li>
-<li><code>Base64InputStream</code>   Provides Base64 encoding and decoding in a streaming fashion (unlimited size).</li>
-<li><code>BinaryCodec</code> Conrts between byte arrays and strings of &ldquo;0&rdquo;s and &ldquo;1&rdquo;s.</li>
+<li><code>Base32</code>	Provides Base32 encoding and decoding as defined by RFC 4648</li>
+<li><code>Base32InputStream</code>	Provides Base32 encoding and decoding in a streaming fashion (unlimited size).</li>
+<li><strong><code>Base64</code></strong>	提供由RFC 2045定义的Base64编码和解码</li>
+<li><code>Base64InputStream</code>	Provides Base64 encoding and decoding in a streaming fashion (unlimited size).</li>
+<li><code>BinaryCodec</code>	Conrts between byte arrays and strings of &ldquo;0&quot;s and &ldquo;1&quot;s.</li>
 <li><strong><code>Hex</code></strong>: byte[] 和 字符串 互转 工具类</li>
 </ul>
-
 <h2 id="摘要编码器">摘要编码器</h2>
-
 <ul>
-<li><strong><code>DigestUtils</code></strong> 简化常见的MessageDigest操作，并提供GNU libc crypt(3) 兼容的密码散列函数</li>
+<li><strong><code>DigestUtils</code></strong>	简化常见的MessageDigest操作，并提供GNU libc crypt(3) 兼容的密码散列函数</li>
 </ul>
-
 <h2 id="language-encoders">Language Encoders</h2>
-
 <ul>
-<li><code>Caverphone 1.0</code>  Encodes a string into a Caverphone 1.0 value.</li>
-<li><code>Caverphone 2.0</code>  Encodes a string into a Caverphone 2.0 value.</li>
-<li><code>Cologne Phonetic</code>    Encodes a string into a Cologne Phonetic value.</li>
-<li><code>Double Metaphone</code>    Encodes a string into a double metaphone value.</li>
-<li><code>Metaphone</code>   Encodes a string into a Metaphone value.</li>
-<li><code>Refined Soundex</code> Encodes a string into a Refined Soundex value.</li>
-<li><code>Soundex</code> Encodes a string into a Soundex value.</li>
+<li><code>Caverphone 1.0</code>	Encodes a string into a Caverphone 1.0 value.</li>
+<li><code>Caverphone 2.0</code>	Encodes a string into a Caverphone 2.0 value.</li>
+<li><code>Cologne Phonetic</code>	Encodes a string into a Cologne Phonetic value.</li>
+<li><code>Double Metaphone</code>	Encodes a string into a double metaphone value.</li>
+<li><code>Metaphone</code>	Encodes a string into a Metaphone value.</li>
+<li><code>Refined Soundex</code>	Encodes a string into a Refined Soundex value.</li>
+<li><code>Soundex</code>	Encodes a string into a Soundex value.</li>
 </ul>
-
 <h2 id="network-encoders">Network Encoders</h2>
-
 <ul>
-<li><code>BCodec</code>  Identical to the Base64 encoding defined by RFC 1521 and allows a character set to be specified.</li>
-<li><code>QCodec</code>  Similar to the Quoted-Printable content-transfer-encoding defined in RFC 1521 and designed to allow text containing mostly ASCII characters to be decipherable on an ASCII terminal without decoding.</li>
-<li><code>QuotedPrintableCodec</code>    Codec for the Quoted-Printable section of RFC 1521 .</li>
-<li><code>URLCodec</code>    Implements the www-form-urlencoded encoding scheme, also misleadingly known as URL encoding.</li>
+<li><code>BCodec</code>	Identical to the Base64 encoding defined by RFC 1521 and allows a character set to be specified.</li>
+<li><code>QCodec</code>	Similar to the Quoted-Printable content-transfer-encoding defined in RFC 1521 and designed to allow text containing mostly ASCII characters to be decipherable on an ASCII terminal without decoding.</li>
+<li><code>QuotedPrintableCodec</code>	Codec for the Quoted-Printable section of RFC 1521 .</li>
+<li><code>URLCodec</code>	Implements the www-form-urlencoded encoding scheme, also misleadingly known as URL encoding.</li>
 </ul>
-
 <h2 id="read-more">Read More</h2>
-
 <ul>
-<li><a href="http://commons.apache.org/proper/commons-codec/userguide.html">commons-codec 用户指南</a></li>
+<li>
+  <a href="http://commons.apache.org/proper/commons-codec/userguide.html">commons-codec 用户指南</a></li>
 </ul>
 </article>
-
+ 
       
-<div class="book-footer justify-between">
-  
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
   <div>
     
-    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified by kaibin.yang | Sep 7, 2019' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Sep 7, 2019</span>
     </a>
   </div>
-  
-  
+
+
+
   <div>
-    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Codec/_index.md" target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Codec/_index.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
     </a>
   </div>
-  
+
 </div>
 
+ 
+        
+      </footer>
 
       
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
     </div>
 
     
-  
-
-  <aside class="book-toc level-3 fixed">
-    <nav id="TableOfContents">
-<ul>
-<li><a href="#commons-codec">commons-codec</a>
-<ul>
-<li><a href="#maven-依赖">Maven 依赖</a></li>
-<li><a href="#简介">简介</a></li>
-<li><a href="#二进制编码器">二进制编码器</a></li>
-<li><a href="#摘要编码器">摘要编码器</a></li>
-<li><a href="#language-encoders">Language Encoders</a></li>
-<li><a href="#network-encoders">Network Encoders</a></li>
-<li><a href="#read-more">Read More</a></li>
-</ul></li>
-</ul>
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#commons-codec">commons-codec</a>
+      <ul>
+        <li><a href="#maven-依赖">Maven 依赖</a></li>
+        <li><a href="#简介">简介</a></li>
+        <li><a href="#二进制编码器">二进制编码器</a></li>
+        <li><a href="#摘要编码器">摘要编码器</a></li>
+        <li><a href="#language-encoders">Language Encoders</a></li>
+        <li><a href="#network-encoders">Network Encoders</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
-  </aside>
 
-
-
+ 
+    </aside>
+    
   </main>
-  
-  
+
   
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,15 +4,16 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="操作 YAML 文件 新增依赖 &lt;dependency&gt; &lt;groupId&gt;org.yaml&lt;/groupId&gt; &lt;artifactId&gt;snakeyaml&lt;/artifactId&gt; &lt;version&gt;1.24&lt;/version&gt; &lt;/dependency&gt; my.yaml spring: application: name: spring-${person.name} person: name: Kail age: 27 代码示例 URL myYaml = ClassLoader.getSystemResource(&#34;my.yaml&#34;); Configurations configurations = new Configurations(); YAMLConfiguration configuration = configurations.fileBased(YAMLConfiguration.class, myYaml); String string = configuration.getString(&#34;spring.application.name&#34;); "><meta property="og:title" content="" />
+<meta property="og:description" content="操作 YAML 文件 新增依赖 &lt;dependency&gt; &lt;groupId&gt;org.yaml&lt;/groupId&gt; &lt;artifactId&gt;snakeyaml&lt;/artifactId&gt; &lt;version&gt;1.24&lt;/version&gt; &lt;/dependency&gt; my.yaml spring: application: name: spring-${person.name} person: name: Kail age: 27 代码示例 URL myYaml = ClassLoader.getSystemResource(&#34;my.yaml&#34;); Configurations configurations = new Configurations(); YAMLConfiguration configuration = configurations.fileBased(YAMLConfiguration.class, myYaml); String string = configuration.getString(&#34;spring.application.name&#34;); " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Yaml/" />
+<meta property="article:modified_time" content="2019-09-07T18:48:53+08:00" />
 <title>Yaml | Apache-Commons</title>
-
-
-<link rel="stylesheet" href="/Apache-Commons/book.min.79de1f7861b0c98f453c0a93bebf3608a280809e417787746c373699639900d7.css">
-
-
-
-
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
 
 
 <!--
@@ -24,13 +25,14 @@ https://github.com/alex-shpak/hugo-book
 </head>
 
 <body>
-  <input type="checkbox" style="display: none" id="menu-control" />
-  <main class="flex container">
-
-    <aside class="book-menu fixed">
-      <nav>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
 <h2 class="book-brand">
-  <a href="https://hello-world-example.github.io/Apache-Commons/">Apache-Commons</a>
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
 </h2>
 
 
@@ -38,41 +40,52 @@ https://github.com/alex-shpak/hugo-book
 
 
 
-    
-  
-  
-  
 
-  <style>
-  nav ul a[href$="\2f Apache-Commons\2f docs\2f Configuration\2fYaml\2f "] {
-      color: #004ed0;
-  }
-  </style>
 
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
 <ul>
-<li><a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
-<li><a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
-<li><a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
-</ul></li>
-<li><a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
-<li><a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
-
-<ul>
-<li><a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
-<li><a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
-</ul></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
 </ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/"class=active>Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
 
 
 
@@ -83,99 +96,154 @@ https://github.com/alex-shpak/hugo-book
 </nav>
 
 
-<script>
-(function() {
-  var menu = document.querySelector("aside.book-menu nav");
-  addEventListener("beforeunload", function(event) {
-    localStorage.setItem("menu.scrollTop", menu.scrollTop);
-  });
-  menu.scrollTop = localStorage.getItem("menu.scrollTop");
-})();
-</script>
 
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
     </aside>
 
     <div class="book-page">
-      <header class="flex align-center justify-between book-header">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
   <label for="menu-control">
-    <img src="/Apache-Commons/svg/menu.svg" alt="Menu" />
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
+
   <strong>Yaml</strong>
-</header>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#操作-yaml-文件">操作 YAML 文件</a>
+      <ul>
+        <li><a href="#新增依赖">新增依赖</a></li>
+        <li><a href="#myyaml">my.yaml</a></li>
+        <li><a href="#代码示例">代码示例</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
 
       
-<article class="markdown">
-
-<h1 id="操作-yaml-文件">操作 YAML 文件</h1>
-
+      
+  <article class="markdown"><h1 id="操作-yaml-文件">操作 YAML 文件</h1>
 <h2 id="新增依赖">新增依赖</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
     <span style="color:#f92672">&lt;groupId&gt;</span>org.yaml<span style="color:#f92672">&lt;/groupId&gt;</span>
     <span style="color:#f92672">&lt;artifactId&gt;</span>snakeyaml<span style="color:#f92672">&lt;/artifactId&gt;</span>
     <span style="color:#f92672">&lt;version&gt;</span>1.24<span style="color:#f92672">&lt;/version&gt;</span>
-<span style="color:#f92672">&lt;/dependency&gt;</span></code></pre></div>
-<h2 id="my-yaml">my.yaml</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">spring:
-  application:
-    name: spring-${person.name}
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><h2 id="myyaml">my.yaml</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">spring</span>:
+  <span style="color:#66d9ef">application</span>:
+    <span style="color:#66d9ef">name</span>: spring-${person.name}
 
-person:
-  name: Kail
-  age: <span style="color:#ae81ff">27</span></code></pre></div>
-<h2 id="代码示例">代码示例</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">URL <span style="color:#a6e22e">myYaml</span> <span style="color:#f92672">=</span> ClassLoader.<span style="color:#a6e22e">getSystemResource</span>(<span style="color:#e6db74">&#34;my.yaml&#34;</span>);
+<span style="color:#66d9ef">person</span>:
+  <span style="color:#66d9ef">name</span>: Kail
+  <span style="color:#66d9ef">age</span>: <span style="color:#ae81ff">27</span>
+</code></pre></div><h2 id="代码示例">代码示例</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">URL myYaml <span style="color:#f92672">=</span> ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getSystemResource</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;my.yaml&#34;</span><span style="color:#f92672">);</span>
 
-Configurations <span style="color:#a6e22e">configurations</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations();
+Configurations configurations <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configurations<span style="color:#f92672">();</span>
 
-YAMLConfiguration <span style="color:#a6e22e">configuration</span> <span style="color:#f92672">=</span> configurations.<span style="color:#a6e22e">fileBased</span>(YAMLConfiguration.<span style="color:#a6e22e">class</span>, myYaml);
+YAMLConfiguration configuration <span style="color:#f92672">=</span> configurations<span style="color:#f92672">.</span><span style="color:#a6e22e">fileBased</span><span style="color:#f92672">(</span>YAMLConfiguration<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> myYaml<span style="color:#f92672">);</span>
 
-String <span style="color:#a6e22e">string</span> <span style="color:#f92672">=</span> configuration.<span style="color:#a6e22e">getString</span>(<span style="color:#e6db74">&#34;spring.application.name&#34;</span>);</code></pre></div></article>
-
+String string <span style="color:#f92672">=</span> configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;spring.application.name&#34;</span><span style="color:#f92672">);</span>
+</code></pre></div></article>
+ 
       
-<div class="book-footer justify-between">
-  
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
   <div>
     
-    <a href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified Sep 7, 2019 by kaibin.yang' target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/calendar.svg" alt="Changed" /> Sep 7, 2019
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/1263b1b2f8da5c4494c7f5c7d9ae95b6b3c1e689" title='Last modified by kaibin.yang | Sep 7, 2019' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Sep 7, 2019</span>
     </a>
   </div>
-  
-  
+
+
+
   <div>
-    <a href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Configuration/Yaml.md" target="_blank" rel="noopener">
-      <img src="/Apache-Commons/svg/edit.svg" alt="Edit" /> Edit this page
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/Configuration/Yaml.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
     </a>
   </div>
-  
+
 </div>
 
+ 
+        
+      </footer>
 
       
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
     </div>
 
     
-  
-
-  <aside class="book-toc level-3 fixed">
-    <nav id="TableOfContents">
-<ul>
-<li><a href="#操作-yaml-文件">操作 YAML 文件</a>
-<ul>
-<li><a href="#新增依赖">新增依赖</a></li>
-<li><a href="#my-yaml">my.yaml</a></li>
-<li><a href="#代码示例">代码示例</a></li>
-</ul></li>
-</ul>
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#操作-yaml-文件">操作 YAML 文件</a>
+      <ul>
+        <li><a href="#新增依赖">新增依赖</a></li>
+        <li><a href="#myyaml">my.yaml</a></li>
+        <li><a href="#代码示例">代码示例</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
-  </aside>
 
-
-
+ 
+    </aside>
+    
   </main>
-  
-  
+
   
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
