@@ -12,6 +12,7 @@
         <module>configuration2</module>
         <module>pool2</module>
         <module>ognl</module>
+        <module>demo-httpclient</module>
     </modules>
 
 
