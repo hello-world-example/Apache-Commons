@@ -4,6 +4,9 @@ headless: true
 
 - [**HttpClient**]({{< relref "/docs/HttpClient/_index.md" >}})
     - [构造 HttpClient]({{< relref "/docs/HttpClient/Build-HttpClient.md" >}})
+    - [_HttpClientConnectionManager]({{< relref "/docs/HttpClient/HttpClientConnectionManager.md" >}})
+    - _ClientExecChain
+    - _HttpClientBuilder
 - [**Codec**]({{< relref "/docs/Codec/_index.md" >}})
 - [**Compress**]({{< relref "/docs/Compress/_index.md" >}})
     * [TarUtil]({{< relref "/docs/Compress/tar.md" >}})
