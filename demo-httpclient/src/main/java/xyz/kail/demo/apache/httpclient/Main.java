@@ -2,9 +2,9 @@ package xyz.kail.demo.apache.httpclient;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import java.util.concurrent.TimeUnit;
@@ -36,7 +36,16 @@ public class Main {
                 // 设置连接池
                 .setConnectionManager(pooling)
 
+                // ❤❤❤ 禁用重试
+                .disableAutomaticRetries()
+                .setRetryHandler(new DefaultHttpRequestRetryHandler())
+
                 .build();
+
+        HttpGet httpGet = new HttpGet("");
+        httpGet.abort();
+
+
 
     }
 

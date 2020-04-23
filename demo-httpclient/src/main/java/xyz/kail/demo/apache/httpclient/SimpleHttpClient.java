@@ -17,12 +17,12 @@ public class SimpleHttpClient {
     public static void main(String[] args) throws IOException {
 
     RequestConfig requestConfig = RequestConfig.custom()
-            .setConnectTimeout(1_000)
+            .setConnectTimeout(500)
             .setSocketTimeout(2_000)
             .build();
 
     CloseableHttpClient httpClient = HttpClients.custom()
-            .setDefaultRequestConfig(requestConfig)
+            .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(500).setSocketTimeout(2_000).build())
             .build();
 
         HttpRequestBase request = new HttpGet("");

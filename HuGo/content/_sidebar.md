@@ -3,8 +3,9 @@ headless: true
 ---
 
 - [**HttpClient**]({{< relref "/docs/HttpClient/_index.md" >}})
-    - [构造 HttpClient]({{< relref "/docs/HttpClient/Build-HttpClient.md" >}})
+    - [构造 HttpClient]({{< relref "/docs/HttpClient/Create-HttpClient.md" >}})
     - [_HttpClientConnectionManager]({{< relref "/docs/HttpClient/HttpClientConnectionManager.md" >}})
+    - [HttpRequestRetryHandler]({{< relref "/docs/HttpClient/HttpRequestRetryHandler.md" >}})
     - _ClientExecChain
     - _HttpClientBuilder
 - [**Codec**]({{< relref "/docs/Codec/_index.md" >}})
