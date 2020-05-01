@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HttpClient 重试机制 目的 重试机制有以下好处
+ 自动容错，在网络抖动的时候保证结果整体可用  也会代理以下问题
+ 如果接口不幂等，会导致重复提交 同一个操作被多次执行  这里主要目的就是为了确定，HttpClient 内置的重试机制是否会导致副作用，针对 4.5.x
+默认行为 默认构建方式 // 等同于 CloseableHttpClient httpClient = HttpClients.createDefault(); // 等同于 CloseableHttpClient httpClient = HttpClientBuilder.create().build(); CloseableHttpClient httpClient = HttpClients.custom().build(); HttpClientBuilder.build() 方法 public CloseableHttpClient build() { // HttpClient 的执行过程采用，责任链模式，一层包一层，通过 构造函数传递下一个链节点  // 重试（RetryExec） 是整个请求责任链中的一个节点，  // 根据指定的条件（HttpRequestRetryHandler 的实现），判断是否需要重新执行后续责任链  ClientExecChain execChain = ... ; // MainClientExec 主链  // ProtocolExec 协议链  // ...  // RetryExec ❤❤❤ 重试链（ IOException 异常时的重试策略） ❤❤❤  // ❤❤❤ 默认 false，不禁用重试  // ❤❤❤ 可通过 HttpClientBuilder."><meta property="og:title" content="" />
+<meta property="og:description" content="HttpClient 重试机制 目的 重试机制有以下好处
+ 自动容错，在网络抖动的时候保证结果整体可用  也会代理以下问题
+ 如果接口不幂等，会导致重复提交 同一个操作被多次执行  这里主要目的就是为了确定，HttpClient 内置的重试机制是否会导致副作用，针对 4.5.x
+默认行为 默认构建方式 // 等同于 CloseableHttpClient httpClient = HttpClients.createDefault(); // 等同于 CloseableHttpClient httpClient = HttpClientBuilder.create().build(); CloseableHttpClient httpClient = HttpClients.custom().build(); HttpClientBuilder.build() 方法 public CloseableHttpClient build() { // HttpClient 的执行过程采用，责任链模式，一层包一层，通过 构造函数传递下一个链节点  // 重试（RetryExec） 是整个请求责任链中的一个节点，  // 根据指定的条件（HttpRequestRetryHandler 的实现），判断是否需要重新执行后续责任链  ClientExecChain execChain = ... ; // MainClientExec 主链  // ProtocolExec 协议链  // ...  // RetryExec ❤❤❤ 重试链（ IOException 异常时的重试策略） ❤❤❤  // ❤❤❤ 默认 false，不禁用重试  // ❤❤❤ 可通过 HttpClientBuilder." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/" />
+<meta property="article:modified_time" content="2020-05-02T00:21:56+08:00" />
+<title>Http Request Retry Handler | Apache-Commons</title>
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/"><strong>HttpClient</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/Create-HttpClient/">构造 HttpClient</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/">_HttpClientConnectionManager</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/"class=active>HttpRequestRetryHandler</a></li>
+<li>_ClientExecChain</li>
+<li>_HttpClientBuilder</li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Http Request Retry Handler</strong>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-重试机制">HttpClient 重试机制</a>
+      <ul>
+        <li><a href="#目的">目的</a></li>
+        <li><a href="#默认行为">默认行为</a>
+          <ul>
+            <li><a href="#默认构建方式">默认构建方式</a></li>
+            <li><a href="#httpclientbuilderbuild-方法">HttpClientBuilder.build() 方法</a></li>
+            <li><a href="#retryexec">RetryExec</a></li>
+            <li><a href="#defaulthttprequestretryhandler">DefaultHttpRequestRetryHandler</a></li>
+          </ul>
+        </li>
+        <li><a href="#结论">结论</a></li>
+        <li><a href="#思考">思考</a></li>
+        <li><a href="#如何设置">如何设置</a></li>
+        <li><a href="#其它细节">其它细节</a>
+          <ul>
+            <li><a href="#standardhttprequestretryhandler">StandardHttpRequestRetryHandler</a></li>
+            <li><a href="#serviceunavailableretrystrategy">ServiceUnavailableRetryStrategy</a></li>
+          </ul>
+        </li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="httpclient-重试机制">HttpClient 重试机制</h1>
+<h2 id="目的">目的</h2>
+<p>重试机制有以下好处</p>
+<ul>
+<li>自动容错，在网络抖动的时候保证结果整体可用</li>
+</ul>
+<p>也会代理以下问题</p>
+<ul>
+<li>如果接口不幂等，会导致重复提交</li>
+<li>同一个操作被多次执行</li>
+</ul>
+<p>这里主要目的就是为了确定，HttpClient 内置的重试机制是否会导致副作用，针对 <code>4.5.x</code></p>
+<h2 id="默认行为">默认行为</h2>
+<h3 id="默认构建方式">默认构建方式</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 等同于 CloseableHttpClient httpClient = HttpClients.createDefault();
+</span><span style="color:#75715e">// 等同于 CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+</span><span style="color:#75715e"></span>CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div><h3 id="httpclientbuilderbuild-方法">HttpClientBuilder.build() 方法</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> CloseableHttpClient <span style="color:#a6e22e">build</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// HttpClient 的执行过程采用，责任链模式，一层包一层，通过 构造函数传递下一个链节点
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 重试（RetryExec） 是整个请求责任链中的一个节点，
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 根据指定的条件（HttpRequestRetryHandler 的实现），判断是否需要重新执行后续责任链
+</span><span style="color:#75715e"></span>  ClientExecChain execChain <span style="color:#f92672">=</span> <span style="color:#f92672">...</span> <span style="color:#f92672">;</span> 
+  
+  <span style="color:#75715e">// MainClientExec             主链
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// ProtocolExec               协议链
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// RetryExec                  ❤❤❤ 重试链（ IOException 异常时的重试策略） ❤❤❤ 
+</span><span style="color:#75715e"></span>  
+  <span style="color:#75715e">// ❤❤❤  默认 false，不禁用重试
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// ❤❤❤  可通过 HttpClientBuilder.disableAutomaticRetries() 禁用
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>automaticRetriesDisabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    HttpRequestRetryHandler retryHandlerCopy <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">retryHandler</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>retryHandlerCopy <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// ❤❤❤  如果没有自定义 HttpRequestRetryHandler， 使用默认配置
+</span><span style="color:#75715e"></span>      retryHandlerCopy <span style="color:#f92672">=</span> DefaultHttpRequestRetryHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// ❤❤❤ RetryExec 包裹 重试策略，加入到 责任链路中
+</span><span style="color:#75715e"></span>    execChain <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RetryExec<span style="color:#f92672">(</span>execChain<span style="color:#f92672">,</span> retryHandlerCopy<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+  
+  <span style="color:#75715e">//  ❤❤❤ 服务不可用时的重试策略 ❤❤❤ 
+</span><span style="color:#75715e"></span>  ServiceUnavailableRetryStrategy serviceUnavailStrategyCopy <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">serviceUnavailStrategy</span><span style="color:#f92672">;</span>
+  <span style="color:#75715e">// ❤❤❤ 默认是空 不会启用 ❤❤❤ 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>serviceUnavailStrategyCopy <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    execChain <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServiceUnavailableRetryExec<span style="color:#f92672">(</span>execChain<span style="color:#f92672">,</span> serviceUnavailStrategyCopy<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+  
+  <span style="color:#75715e">// RedirectExec
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// BackoffStrategyExec
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">// CloseableHttpClient 的默认实现 InternalHttpClient
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> InternalHttpClient<span style="color:#f92672">(</span>
+    execChain<span style="color:#f92672">,</span>
+    connManagerCopy<span style="color:#f92672">,</span>
+    routePlannerCopy<span style="color:#f92672">,</span>
+    cookieSpecRegistryCopy<span style="color:#f92672">,</span>
+    authSchemeRegistryCopy<span style="color:#f92672">,</span>
+    defaultCookieStore<span style="color:#f92672">,</span>
+    defaultCredentialsProvider<span style="color:#f92672">,</span>
+    defaultRequestConfig <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> defaultRequestConfig <span style="color:#f92672">:</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">DEFAULT</span><span style="color:#f92672">,</span>
+    closeablesCopy
+  <span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="retryexec">RetryExec</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RetryExec</span> <span style="color:#66d9ef">implements</span> ClientExecChain <span style="color:#f92672">{</span>
+
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> CloseableHttpResponse <span style="color:#a6e22e">execute</span><span style="color:#f92672">(...)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> HttpException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 无限循环，直到抛出异常
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> execCount <span style="color:#f92672">=</span> 1<span style="color:#f92672">;;</span> execCount<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 先执行后续责任链逻辑
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">requestExecutor</span><span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> request<span style="color:#f92672">,</span> context<span style="color:#f92672">,</span> execAware<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// ❤❤❤ 如果出现 IOException，执行后续重试逻辑的判断 ❤❤❤ 
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> IOException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 如果当前执行流程已经被中断，不进行重试，直接抛出一下，如：异步批量执行的情况的
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// HttpRequestFutureTask&lt;Object&gt; futureTask = FutureRequestExecutionService.execute(reuqest);
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// futureTask.cancel(true)
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>execAware <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> execAware<span style="color:#f92672">.</span><span style="color:#a6e22e">isAborted</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+
+
+        <span style="color:#75715e">// ❤❤❤ 如果重试策略判断为可重试，不抛出异常， for 继续，执行下一次 execute ❤❤❤
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>retryHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">retryRequest</span><span style="color:#f92672">(</span>ex<span style="color:#f92672">,</span> execCount<span style="color:#f92672">,</span> context<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// ❤❤❤ 判断当前请求是否支持重试，主要根据 ❤❤❤
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// 1. 当前请求是否包含请求体(HttpEntityEnclosingRequest 的子类)
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">//    常见的包含请求体的：POST、PUT、PATCH
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// 2. 如果有请求体（HttpEntity），判断 HttpEntity 的实现是否支持重试，常见的如
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// StringEntity          可重试 ❤ post json 
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// UrlEncodedFormEntity  可重试 ❤ post kv 表单
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// MultipartFormEntity   可重试 ❤ post 文件、字节流
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// InputStreamEntity    不可重试
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// BasicHttpEntity      不可重试
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>RequestEntityProxy<span style="color:#f92672">.</span><span style="color:#a6e22e">isRepeatable</span><span style="color:#f92672">(</span>request<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NonRepeatableRequestException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Cannot retry request with a non-repeatable request entity&#34;</span><span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
+          <span style="color:#f92672">}</span>
+          <span style="color:#75715e">// ... 一些日志打印
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// ... 省略对 NoHttpResponseException 异常的包装
+</span><span style="color:#75715e"></span>          <span style="color:#75715e">// ❤❤❤ 如果不能重试，则抛出异常，结束循环，退出当前执行链
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+      <span style="color:#f92672">}</span> <span style="color:#75715e">// -- catch end
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#75715e">//  -- for end
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">}</span> <span style="color:#75715e">// -- execute end
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="defaulthttprequestretryhandler">DefaultHttpRequestRetryHandler</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultHttpRequestRetryHandler</span> <span style="color:#66d9ef">implements</span> HttpRequestRetryHandler <span style="color:#f92672">{</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> DefaultHttpRequestRetryHandler INSTANCE <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DefaultHttpRequestRetryHandler<span style="color:#f92672">();</span>
+
+  <span style="color:#75715e">// 重试次数，默认 3 次
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> retryCount<span style="color:#f92672">;</span>
+  <span style="color:#75715e">// 已经发送成功的数据是否重试，默认 false（避免重复发送）
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> requestSentRetryEnabled<span style="color:#f92672">;</span>
+  <span style="color:#75715e">// ❤❤❤ 不进行重试的 IOException，默认
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - ConnectException                     连接建立失败
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - InterruptedIOException
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - - - java.net.SocketTimeoutException
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - - - - - - connect timed out          链接超时，被封装成 ConnectTimeoutException
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - - - - - - Read timed out             读超时（连接建立后，响应超过指定的时间）
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - UnknownHostException                 域名解析失败
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// - SSLException                         HTTPs 失败
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Set<span style="color:#f92672">&lt;</span>Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> IOException<span style="color:#f92672">&gt;&gt;</span> nonRetriableClasses<span style="color:#f92672">;</span>
+
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DefaultHttpRequestRetryHandler</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> retryCount<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> requestSentRetryEnabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ❤❤❤ 默认，不进行重试的 IOException
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>retryCount<span style="color:#f92672">,</span> requestSentRetryEnabled<span style="color:#f92672">,</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>
+      InterruptedIOException<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> 
+      UnknownHostException<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> 
+      ConnectException<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">,</span> 
+      SSLException<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span>
+    <span style="color:#f92672">));</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DefaultHttpRequestRetryHandler</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 默认重试 3次， INSTANCE = new DefaultHttpRequestRetryHandler();
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>3<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">retryRequest</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> IOException exception<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> executionCount<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> HttpContext context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">// [不重试] 起始是 1，超过重试次数（默认是3）结束循环
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>executionCount <span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">retryCount</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+    
+    <span style="color:#75715e">//  [不重试] 发生的异常是 不进行重试的异常
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">nonRetriableClasses</span><span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>exception<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> IOException<span style="color:#f92672">&gt;</span> rejectException <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">nonRetriableClasses</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  [不重试] 发生的异常是 不进行重试的异常 的子类实现
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rejectException<span style="color:#f92672">.</span><span style="color:#a6e22e">isInstance</span><span style="color:#f92672">(</span>exception<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// [不重试]请求流程被取消
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>requestIsAborted<span style="color:#f92672">(</span>request<span style="color:#f92672">)){</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// 【【【重试】】】请求是幂等的【【【重试】】】
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 幂等的 判断条件是：不是 HttpEntityEnclosingRequest 的实例，常见实现 POST、PUT、PATCH
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 常见的幂等请求类型有：GET、DELETE、HEAD、OPTIONS、TRACE （没有请求体）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>handleAsIdempotent<span style="color:#f92672">(</span>request<span style="color:#f92672">))</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// 【【【重试】】】数没发送完 || requestSentRetryEnabled 默认 false
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 是否发送完，通过 HttpCoreContext.HTTP_REQ_SENT(http.request_sent) 变量标示，大致流程是
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 1. 提交数据之前 标示 HttpCoreContext.HTTP_REQ_SENT 为 false
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 2. conn.flush（ outStream.flush() 提交数据 ），如果 flush 出现异常，则当前请求未完成
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 3. 如果 flush 操作没抛异常，标示 HttpCoreContext.HTTP_REQ_SENT 为 false
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>clientContext<span style="color:#f92672">.</span><span style="color:#a6e22e">isRequestSent</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">requestSentRetryEnabled</span><span style="color:#f92672">){</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+    
+    <span style="color:#75715e">// [不重试]
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><h2 id="结论">结论</h2>
+<ul>
+<li>HttpClient 的重试策略算是比较严格的（这下就放心了），<strong>要想自动重试，需要满足一下条件</strong>，发生 <code>IOException</code> 的情况下
+<ul>
+<li><strong>❤ 请求是幂等的：<code>GET</code>、<code>DELETE</code> &hellip;</strong></li>
+<li><strong>❤ 请求是非幂等的：<code>POST</code>、<code>PUT</code> &hellip; 且数据未真正提交成功（服务端未接收到成功）</strong></li>
+</ul>
+</li>
+<li>以下请求<strong>不会重试</strong>，发生 <code>IOException</code> 的情况下
+<ul>
+<li><strong>❤ <code>POST</code>、<code>PUT</code> .. 请求，且数据正常发送</strong></li>
+<li>发生已下 <code>IOException</code>
+<ul>
+<li><code>ConnectException</code> 连接建立失败</li>
+<li><code>UnknownHostException</code> 域名解析失败</li>
+<li><code>SSLException</code>  HTTPs 失败</li>
+<li><code>InterruptedIOException</code>
+<ul>
+<li><code>org.apache.http.conn.ConnectTimeoutException</code>
+<ul>
+<li><code>org.apache.http.conn.ConnectionPoolTimeoutException</code></li>
+</ul>
+</li>
+<li><code>java.net.SocketTimeoutException</code> <strong>connect timed out</strong> 、<strong>Read timed out</strong></li>
+<li><code>org.apache.http.impl.execchain.RequestAbortedException</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>如果接口设计符合标准，HttpClient 的默认重试策略，不会造成 重复提交、执行多次的问题</strong>
+<ul>
+<li><del>如果在 GET 请求里面有新增数据的操作，则重试策略可能会导致新增多条</del></li>
+</ul>
+</li>
+</ul>
+<h2 id="思考">思考</h2>
+<p>为什么 HttpClient 会这样设计重试策略？ 可能基于以下几点，如果出现异常：</p>
+<ul>
+<li>重试是否会造成重复数据，如果不会，则尝试重试</li>
+<li>下次重试是否有可能成功？ 如果可能成功，则重试</li>
+</ul>
+<p>以上几点在实际业务中可能都不一定完全合适</p>
+<ul>
+<li>HttpClient 是按照接口规范进行设计，实际业务场景中，不一定所有人都能遵循接口规范</li>
+<li><code>ConnectTimeoutException</code> 可能由于网络抖动，是暂时行的，下次重试是有可能成功的</li>
+</ul>
+<h2 id="如何设置">如何设置</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">RequestConfig requestConfig <span style="color:#f92672">=</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>500<span style="color:#f92672">).</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>2_000<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#75715e">// 超时时间设置
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultRequestConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// ❤❤❤ 禁用重试
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">disableAutomaticRetries</span><span style="color:#f92672">()</span>
+  <span style="color:#75715e">// ❤❤❤ 自定义重试策略
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// .setRetryHandler(...)
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="其它细节">其它细节</h2>
+<h3 id="standardhttprequestretryhandler">StandardHttpRequestRetryHandler</h3>
+<ul>
+<li>HttpRequestRetryHandler(org.apache.http.client)
+<ul>
+<li><strong>DefaultHttpRequestRetryHandler</strong> (org.apache.http.impl.client)
+<ul>
+<li><code>StandardHttpRequestRetryHandler</code> (org.apache.http.impl.client)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><code>HttpRequestRetryHandler</code> 除了 默认的 <code>DefaultHttpRequestRetryHandler</code> 实现外，还有一个标准实现，针对 
+  <a href="https://tools.ietf.org/html/rfc2616">RFC-2616</a> (<strong>Hypertext Transfer Protocol &ndash; HTTP/1.1</strong>) 标准来判断接口是是幂等，而不是  <code>DefaultHttpRequestRetryHandler</code> 根据是否有请求体来判断。</p>
+<p>即 <strong>除了 <code>POST</code> / <code>CONNECT</code>(ws) 是非幂等的</strong>，其他都是幂等 请求方式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">StandardHttpRequestRetryHandler</span> <span style="color:#66d9ef">extends</span> DefaultHttpRequestRetryHandler <span style="color:#f92672">{</span>
+
+  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">&gt;</span> idempotentMethods<span style="color:#f92672">;</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">StandardHttpRequestRetryHandler</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> retryCount<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> requestSentRetryEnabled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>retryCount<span style="color:#f92672">,</span> requestSentRetryEnabled<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConcurrentHashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">&gt;();</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;GET&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;HEAD&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;PUT&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DELETE&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;OPTIONS&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;TRACE&#34;</span><span style="color:#f92672">,</span> Boolean<span style="color:#f92672">.</span><span style="color:#a6e22e">TRUE</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">StandardHttpRequestRetryHandler</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>3<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">handleAsIdempotent</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpRequest request<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">final</span> String method <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span><span style="color:#a6e22e">getRequestLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toUpperCase</span><span style="color:#f92672">(</span>Locale<span style="color:#f92672">.</span><span style="color:#a6e22e">ROOT</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">final</span> Boolean b <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">idempotentMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>method<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> b <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">booleanValue</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="serviceunavailableretrystrategy">ServiceUnavailableRetryStrategy</h3>
+<p>服务不可用重试策略，被 <code>ServiceUnavailableRetryExec</code> 引用， 在 <code>RetryExec</code> 之前，执行的时候先执行。</p>
+<p>与 <code>DefaultHttpRequestRetryHandler</code> 的区别在于，<strong>服务不可用的策略重试期间会休眠一段时间</strong></p>
+<h4 id="serviceunavailableretryexec">ServiceUnavailableRetryExec</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> CloseableHttpResponse <span style="color:#a6e22e">execute</span><span style="color:#f92672">(...)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> HttpException <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ..
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 1<span style="color:#f92672">;;</span> c<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">final</span> CloseableHttpResponse response <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">requestExecutor</span><span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(...);</span>
+    
+    <span style="color:#75715e">// 重试策略返回是否重试
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">retryStrategy</span><span style="color:#f92672">.</span><span style="color:#a6e22e">retryRequest</span><span style="color:#f92672">(</span>response<span style="color:#f92672">,</span> c<span style="color:#f92672">,</span> context<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> 
+        <span style="color:#75715e">// 与 RetryExec 中的判断 request 是否可重试逻辑一致
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 即常见的 POST、GET 都是支持重试的 ，InputStreamEntity 等流式 Entity 不支持重试
+</span><span style="color:#75715e"></span>        RequestEntityProxy<span style="color:#f92672">.</span><span style="color:#a6e22e">isRepeatable</span><span style="color:#f92672">(</span>request<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+      
+      response<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+
+      <span style="color:#75715e">// 获取 设置的 重置间隔
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> nextInterval <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">retryStrategy</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getRetryInterval</span><span style="color:#f92672">();</span>
+      <span style="color:#75715e">//... 休眠之后重试
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nextInterval <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span>nextInterval<span style="color:#f92672">);</span> <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> response<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h4 id="defaultserviceunavailableretrystrategy">DefaultServiceUnavailableRetryStrategy</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultServiceUnavailableRetryStrategy</span> <span style="color:#66d9ef">implements</span> ServiceUnavailableRetryStrategy <span style="color:#f92672">{</span>
+
+  <span style="color:#75715e">// 重试次数（默认 1次）
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> maxRetries<span style="color:#f92672">;</span>
+  <span style="color:#75715e">/// 休眠时间（默认 1秒）
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> retryInterval<span style="color:#f92672">;</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DefaultServiceUnavailableRetryStrategy</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> 1000<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">retryRequest</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpResponse response<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> executionCount<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> HttpContext context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 没到重试次数 &amp;&amp; 状态码是 503 进行重试
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> executionCount <span style="color:#f92672">&lt;=</span> maxRetries <span style="color:#f92672">&amp;&amp;</span>
+      response<span style="color:#f92672">.</span><span style="color:#a6e22e">getStatusLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getStatusCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> HttpStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">SC_SERVICE_UNAVAILABLE</span><span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+  <span style="color:#75715e">// ..
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li>
+  <a href="https://www.cnblogs.com/kingszelda/p/8886403.html">关于HttpClient重试策略的研究</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/0b10f1c77eda4f8246a6f776a0f86706562c3aae" title='Last modified by 杨凯彬 | May 2, 2020' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>May 2, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/HttpClient/HttpRequestRetryHandler.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-重试机制">HttpClient 重试机制</a>
+      <ul>
+        <li><a href="#目的">目的</a></li>
+        <li><a href="#默认行为">默认行为</a>
+          <ul>
+            <li><a href="#默认构建方式">默认构建方式</a></li>
+            <li><a href="#httpclientbuilderbuild-方法">HttpClientBuilder.build() 方法</a></li>
+            <li><a href="#retryexec">RetryExec</a></li>
+            <li><a href="#defaulthttprequestretryhandler">DefaultHttpRequestRetryHandler</a></li>
+          </ul>
+        </li>
+        <li><a href="#结论">结论</a></li>
+        <li><a href="#思考">思考</a></li>
+        <li><a href="#如何设置">如何设置</a></li>
+        <li><a href="#其它细节">其它细节</a>
+          <ul>
+            <li><a href="#standardhttprequestretryhandler">StandardHttpRequestRetryHandler</a></li>
+            <li><a href="#serviceunavailableretrystrategy">ServiceUnavailableRetryStrategy</a></li>
+          </ul>
+        </li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

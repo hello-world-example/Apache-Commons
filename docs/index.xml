@@ -15,7 +15,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://hello-world-example.github.io/Apache-Commons/_sidebar/</guid>
-      <description>  Codec  Compress   TarUtil    Configuration   快速开始指南  Properties 文件  Yaml 文件  自动加载  运行时依赖    Ognl  Pool   入门示例  GenericObjectPoolConfig 配置项    </description>
+      <description>  HttpClient   构造 HttpClient  _HttpClientConnectionManager  HttpRequestRetryHandler _ClientExecChain _HttpClientBuilder    Codec  Compress   TarUtil    Configuration   快速开始指南  Properties 文件  Yaml 文件  自动加载  运行时依赖    Ognl  Pool   入门示例  GenericObjectPoolConfig 配置项    </description>
     </item>
     
     <item>
@@ -80,6 +80,37 @@ Configurations configs = new Configurations(); URL databaseRes = ClassLoader.get
       
       <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Yaml/</guid>
       <description>操作 YAML 文件 新增依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.yaml&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;snakeyaml&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.24&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; my.yaml spring: application: name: spring-${person.name} person: name: Kail age: 27 代码示例 URL myYaml = ClassLoader.getSystemResource(&amp;#34;my.yaml&amp;#34;); Configurations configurations = new Configurations(); YAMLConfiguration configuration = configurations.fileBased(YAMLConfiguration.class, myYaml); String string = configuration.getString(&amp;#34;spring.application.name&amp;#34;); </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/Create-HttpClient/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/Create-HttpClient/</guid>
+      <description>HttpClient 的创建  基于： 4.5.x
+ 继承关系  CloseableHttpClient ：4.3.x 依赖的核心接口  MinimalHttpClient ： 包访问级别， HttpClient 极简实现，核心设计的初级模型 InternalHttpClient ： 包访问级别， 通过 HttpClientBuilder 构建的 HttpClient 核心实现 AbstractHttpClient ： 标记过时，  DefaultHttpClient ： 标记过时，  ContentEncodingHttpClient ： 标记过时， SystemDefaultHttpClient ： 标记过时，       AutoRetryHttpClient ： 已过时， HttpClient 和 ServiceUnavailableRetryStrategy 的包装器，现在建议通过 HttpClientBuilder 构建 CloseableHttpClient DecompressingHttpClient ： 已过时，对请求和响应进行编码解码，DefaultHttpClient 、HttpXxxInterceptor 的包装器    可以 new 出来的 HttpClient 全都被标记为过时了 没有过时的 InternalHttpClient 、MinimalHttpClient 两个实现都是 package 级别的访问级别，外部无法直接创建 建议通过 HttpClientBuilder 进行创建，CloseableHttpClient client = HttpClientBuilder.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/</guid>
+      <description>HttpClient 链接池   HttpClient 4.5 官方文档、 官方示例   链接管理器 的实现  HttpClientConnectionManager 链接管理器  BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（synchronized） PoolingHttpClientConnectionManager ： 连接池（池化链接管理器）    PoolingHttpClientConnectionManager 构造方式 public class PoolingHttpClientConnectionManager implements HttpClientConnectionManager, // 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计  ConnPoolControl&amp;lt;HttpRoute&amp;gt;, Closeable { // ...  /** * @since 4.4 */ public PoolingHttpClientConnectionManager( final HttpClientConnectionOperator httpClientConnectionOperator, final HttpConnectionFactory&amp;lt;HttpRoute, ManagedHttpClientConnection&amp;gt; connFactory, final long timeToLive, final TimeUnit timeUnit ) { super(); // 保存 默认 SocketConfig、ConnectionConfig 和  // HttpHost 对应的 SocketConfig、ConnectionConfig  this.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/</guid>
+      <description>HttpClient 重试机制 目的 重试机制有以下好处
+ 自动容错，在网络抖动的时候保证结果整体可用  也会代理以下问题
+ 如果接口不幂等，会导致重复提交 同一个操作被多次执行  这里主要目的就是为了确定，HttpClient 内置的重试机制是否会导致副作用，针对 4.5.x
+默认行为 默认构建方式 // 等同于 CloseableHttpClient httpClient = HttpClients.createDefault(); // 等同于 CloseableHttpClient httpClient = HttpClientBuilder.create().build(); CloseableHttpClient httpClient = HttpClients.custom().build(); HttpClientBuilder.build() 方法 public CloseableHttpClient build() { // HttpClient 的执行过程采用，责任链模式，一层包一层，通过 构造函数传递下一个链节点  // 重试（RetryExec） 是整个请求责任链中的一个节点，  // 根据指定的条件（HttpRequestRetryHandler 的实现），判断是否需要重新执行后续责任链  ClientExecChain execChain = ... ; // MainClientExec 主链  // ProtocolExec 协议链  // ...  // RetryExec ❤❤❤ 重试链（ IOException 异常时的重试策略） ❤❤❤  // ❤❤❤ 默认 false，不禁用重试  // ❤❤❤ 可通过 HttpClientBuilder.</description>
     </item>
     
     <item>

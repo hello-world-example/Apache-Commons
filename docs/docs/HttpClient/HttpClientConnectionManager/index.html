@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HttpClient 链接池   HttpClient 4.5 官方文档、 官方示例   链接管理器 的实现  HttpClientConnectionManager 链接管理器  BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（synchronized） PoolingHttpClientConnectionManager ： 连接池（池化链接管理器）    PoolingHttpClientConnectionManager 构造方式 public class PoolingHttpClientConnectionManager implements HttpClientConnectionManager, // 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计  ConnPoolControl&lt;HttpRoute&gt;, Closeable { // ...  /** * @since 4.4 */ public PoolingHttpClientConnectionManager( final HttpClientConnectionOperator httpClientConnectionOperator, final HttpConnectionFactory&lt;HttpRoute, ManagedHttpClientConnection&gt; connFactory, final long timeToLive, final TimeUnit timeUnit ) { super(); // 保存 默认 SocketConfig、ConnectionConfig 和  // HttpHost 对应的 SocketConfig、ConnectionConfig  this."><meta property="og:title" content="" />
+<meta property="og:description" content="HttpClient 链接池   HttpClient 4.5 官方文档、 官方示例   链接管理器 的实现  HttpClientConnectionManager 链接管理器  BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（synchronized） PoolingHttpClientConnectionManager ： 连接池（池化链接管理器）    PoolingHttpClientConnectionManager 构造方式 public class PoolingHttpClientConnectionManager implements HttpClientConnectionManager, // 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计  ConnPoolControl&lt;HttpRoute&gt;, Closeable { // ...  /** * @since 4.4 */ public PoolingHttpClientConnectionManager( final HttpClientConnectionOperator httpClientConnectionOperator, final HttpConnectionFactory&lt;HttpRoute, ManagedHttpClientConnection&gt; connFactory, final long timeToLive, final TimeUnit timeUnit ) { super(); // 保存 默认 SocketConfig、ConnectionConfig 和  // HttpHost 对应的 SocketConfig、ConnectionConfig  this." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/" />
+<meta property="article:modified_time" content="2020-04-23T19:57:10+08:00" />
+<title>Http Client Connection Manager | Apache-Commons</title>
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/"><strong>HttpClient</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/Create-HttpClient/">构造 HttpClient</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/"class=active>_HttpClientConnectionManager</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/">HttpRequestRetryHandler</a></li>
+<li>_ClientExecChain</li>
+<li>_HttpClientBuilder</li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Http Client Connection Manager</strong>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-链接池">HttpClient 链接池</a>
+      <ul>
+        <li><a href="#链接管理器-的实现">链接管理器 的实现</a></li>
+        <li><a href="#poolinghttpclientconnectionmanager">PoolingHttpClientConnectionManager</a>
+          <ul>
+            <li><a href="#构造方式">构造方式</a></li>
+            <li><a href="#获取链接">获取链接</a></li>
+            <li><a href="#关闭链接">关闭链接</a></li>
+          </ul>
+        </li>
+        <li><a href="#如何使用">如何使用</a>
+          <ul>
+            <li><a href="#基础超时配置">基础超时配置</a></li>
+            <li><a href="#链接池配置">链接池配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#http-keep-alive">HTTP Keep-Alive</a></li>
+        <li><a href="#参数配置">参数配置</a>
+          <ul>
+            <li><a href="#requestconfigcustom">RequestConfig.custom()</a></li>
+            <li><a href="#poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</a></li>
+            <li><a href="#httpclientscustom">HttpClients.custom()</a></li>
+          </ul>
+        </li>
+        <li><a href="#设置多少">设置多少？</a></li>
+        <li><a href="#性能有多少提升">性能有多少提升？</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="httpclient-链接池">HttpClient 链接池</h1>
+<blockquote>
+<ul>
+<li>HttpClient 4.5 
+  <a href="http://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/index.html">官方文档</a>、
+  <a href="http://hc.apache.org/httpcomponents-client-4.5.x/examples.html">官方示例</a></li>
+</ul>
+</blockquote>
+<h2 id="链接管理器-的实现">链接管理器 的实现</h2>
+<ul>
+<li><code>HttpClientConnectionManager</code> 链接管理器
+<ul>
+<li>BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（<code>synchronized</code>）</li>
+<li><strong><code>PoolingHttpClientConnectionManager</code></strong> ： 连接池（池化链接管理器）</li>
+</ul>
+</li>
+</ul>
+<h2 id="poolinghttpclientconnectionmanager">PoolingHttpClientConnectionManager</h2>
+<h3 id="构造方式">构造方式</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PoolingHttpClientConnectionManager</span>
+  <span style="color:#66d9ef">implements</span> HttpClientConnectionManager<span style="color:#f92672">,</span> 
+             <span style="color:#75715e">// 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计
+</span><span style="color:#75715e"></span>             ConnPoolControl<span style="color:#f92672">&lt;</span>HttpRoute<span style="color:#f92672">&gt;,</span>  
+             Closeable <span style="color:#f92672">{</span>
+
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * @since 4.4
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">PoolingHttpClientConnectionManager</span><span style="color:#f92672">(</span>
+    <span style="color:#66d9ef">final</span> HttpClientConnectionOperator httpClientConnectionOperator<span style="color:#f92672">,</span>
+    <span style="color:#66d9ef">final</span> HttpConnectionFactory<span style="color:#f92672">&lt;</span>HttpRoute<span style="color:#f92672">,</span> ManagedHttpClientConnection<span style="color:#f92672">&gt;</span> connFactory<span style="color:#f92672">,</span>
+    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeToLive<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit timeUnit
+  <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">super</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">// 保存 默认 SocketConfig、ConnectionConfig 和 
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// HttpHost 对应的 SocketConfig、ConnectionConfig
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configData</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConfigData<span style="color:#f92672">();</span>
+    <span style="color:#75715e">// 
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CPool<span style="color:#f92672">(</span>
+      <span style="color:#66d9ef">new</span> InternalConnectionFactory<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configData</span><span style="color:#f92672">,</span> connFactory<span style="color:#f92672">),</span> 
+      2<span style="color:#f92672">,</span>  <span style="color:#75715e">// ❤❤❤ defaultMaxPerRoute 即 默认对每个主机的访问并发 2 ❤❤❤
+</span><span style="color:#75715e"></span>      20<span style="color:#f92672">,</span> <span style="color:#75715e">// ❤❤❤ maxTotal           即 默认合计并发 20          ❤❤❤
+</span><span style="color:#75715e"></span>      timeToLive<span style="color:#f92672">,</span> timeUnit <span style="color:#75715e">//❤❤❤ TTL 链接超时时间 ❤❤❤
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">);</span>
+    <span style="color:#75715e">// ❤❤❤❤❤❤ 两次获取间隔超过 2000ms 则检车链接可用性 ❤❤❤❤❤❤
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setValidateAfterInactivity</span><span style="color:#f92672">(</span>2000<span style="color:#f92672">);</span>
+    <span style="color:#75715e">// 默认 DefaultHttpClientConnectionOperator，
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connectionOperator</span> <span style="color:#f92672">=</span> Args<span style="color:#f92672">.</span><span style="color:#a6e22e">notNull</span><span style="color:#f92672">(</span>httpClientConnectionOperator<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;HttpClientConnectionOperator&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isShutDown</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AtomicBoolean<span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="获取链接">获取链接</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> ConnectionRequest <span style="color:#a6e22e">requestConnection</span><span style="color:#f92672">(</span>
+  <span style="color:#66d9ef">final</span> HttpRoute route<span style="color:#f92672">,</span>
+  <span style="color:#66d9ef">final</span> Object state
+<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// .. 
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 从 Pool 中获取链接 Future
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">final</span> Future<span style="color:#f92672">&lt;</span>CPoolEntry<span style="color:#f92672">&gt;</span> future <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lease</span><span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> state<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+
+  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ConnectionRequest<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">cancel</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> future<span style="color:#f92672">.</span><span style="color:#a6e22e">cancel</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> HttpClientConnection <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit timeUnit<span style="color:#f92672">)</span> <span style="color:#f92672">..</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// future.get 过程中的异常和日志处理
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> HttpClientConnection conn <span style="color:#f92672">=</span> leaseConnection<span style="color:#f92672">(</span>future<span style="color:#f92672">,</span> timeout<span style="color:#f92672">,</span> timeUnit<span style="color:#f92672">);</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>conn<span style="color:#f92672">.</span><span style="color:#a6e22e">isOpen</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// ..
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> SocketConfig socketConfig <span style="color:#f92672">=</span> resolveSocketConfig<span style="color:#f92672">(</span>host<span style="color:#f92672">);</span>
+        conn<span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>socketConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">getSoTimeout</span><span style="color:#f92672">());</span>
+      <span style="color:#f92672">}</span>
+      <span style="color:#66d9ef">return</span> conn<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+  <span style="color:#f92672">};</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="关闭链接">关闭链接</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+</code></pre></div><h2 id="如何使用">如何使用</h2>
+<h3 id="基础超时配置">基础超时配置</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">RequestConfig requestConfig <span style="color:#f92672">=</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#75715e">// 链接超时
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>1_000<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// 读写超时
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>2_000<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#75715e">// ❤❤❤ 默认配置
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultRequestConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+HttpRequestBase request <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HttpGet<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+<span style="color:#75715e">// ❤❤❤ 可覆盖 默认配置
+</span><span style="color:#75715e"></span>request<span style="color:#f92672">.</span><span style="color:#a6e22e">setConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">);</span>
+
+httpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>request<span style="color:#f92672">);</span>
+</code></pre></div><h3 id="链接池配置">链接池配置</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
+</code></pre></div><h2 id="http-keep-alive">HTTP Keep-Alive</h2>
+<ul>
+<li>HTTP/1.0通过在 Header 中添加 <code>Connection:Keep-Alive</code> 来表示支持长连接</li>
+<li>HTTP/1.1<strong>默认支持长连接</strong>, 除非在 Header 中显式指定 <code>Connection:Close</code> , 才被视为短连接模式</li>
+</ul>
+<h2 id="参数配置">参数配置</h2>
+<h3 id="requestconfigcustom">RequestConfig.custom()</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th align="center">默认</th>
+<th align="center">建议</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connectTimeout</code></td>
+<td align="center"><code>-1</code></td>
+<td align="center"><code>500</code></td>
+<td>客户端和服务器建立连接的超时时间</td>
+</tr>
+<tr>
+<td><code>socketTimeout</code></td>
+<td align="center"><code>-1</code></td>
+<td align="center"><code>2000</code></td>
+<td>客户端从服务器读取数据的超时时间</td>
+</tr>
+<tr>
+<td><code>connectionRequestTimeout</code></td>
+<td align="center"><code>-1</code></td>
+<td align="center"></td>
+<td>从连接池中获取连接的超时时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th align="center">默认</th>
+<th align="center">建议</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maxTotal</code></td>
+<td align="center"><code>0</code></td>
+<td align="center"></td>
+<td>整个链接池的最大链接数</td>
+</tr>
+<tr>
+<td><code>defaultMaxPerRoute</code></td>
+<td align="center"><code>0</code></td>
+<td align="center"></td>
+<td>某个主机的最大连接数，所有主机加起来不能超过，MAX_CONNECTION_TOTAL</td>
+</tr>
+<tr>
+<td>RETRY_COUNT</td>
+<td align="center">3</td>
+<td align="center"></td>
+<td>重试次数</td>
+</tr>
+<tr>
+<td>CONNECTION_IDLE_TIME_OUT</td>
+<td align="center">5000</td>
+<td align="center"></td>
+<td>闲置的连接的时间阀值</td>
+</tr>
+<tr>
+<td>DEFAULT_KEEP_ALIVE_TIME_MILLIS</td>
+<td align="center">20 * 1000</td>
+<td align="center"></td>
+<td>默认保活时间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="httpclientscustom">HttpClients.custom()</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th align="center">默认</th>
+<th align="center">建议</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maxConnTotal</code></td>
+<td align="center"><code>0</code></td>
+<td align="center"></td>
+<td>整个链接池的最大链接数</td>
+</tr>
+<tr>
+<td><code>maxConnPerRoute</code></td>
+<td align="center"><code>0</code></td>
+<td align="center"></td>
+<td>某个主机的最大连接数，所有主机加起来不能超过，MAX_CONNECTION_TOTAL</td>
+</tr>
+<tr>
+<td>RETRY_COUNT</td>
+<td align="center">3</td>
+<td align="center"></td>
+<td>重试次数</td>
+</tr>
+<tr>
+<td>CONNECTION_IDLE_TIME_OUT</td>
+<td align="center">5000</td>
+<td align="center"></td>
+<td>闲置的连接的时间阀值</td>
+</tr>
+<tr>
+<td>DEFAULT_KEEP_ALIVE_TIME_MILLIS</td>
+<td align="center">20 * 1000</td>
+<td align="center"></td>
+<td>默认保活时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="设置多少">设置多少？</h2>
+<h2 id="性能有多少提升">性能有多少提升？</h2>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li>
+  <a href="https://mp.weixin.qq.com/s/e29_LFHFAMcvrZpOJ9y2kw">HttpClient 连接池也能这样用</a></li>
+<li>
+  <a href="https://mp.weixin.qq.com/s/Bg9Jc7x64j_-sSPhvScQ0g">HttpClient 连接池设置引发的一次雪崩</a></li>
+<li>
+  <a href="https://www.cnblogs.com/kingszelda/p/8988505.html">Http 持久连接与 HttpClient连接池</a></li>
+<li>TODO <a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8130736">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8130736</a> 记一次 HttpClient 死锁问题</li>
+<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=9155747">http://confluence.ttpai.cn/pages/viewpage.action?pageId=9155747</a> 高并发场景下的httpClient优化使用</li>
+<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8154751">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8154751</a> HttpClient你不一定会用</li>
+<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=9156972">http://confluence.ttpai.cn/pages/viewpage.action?pageId=9156972</a></li>
+<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8158882">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8158882</a> HttpClient 4.4 无法携带 Cookies 问题</li>
+<li><a href="https://www.jianshu.com/p/14c005e9287c">https://www.jianshu.com/p/14c005e9287c</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/8167a9ded0b7f338244d3505aea533f079930ad4" title='Last modified by 杨凯彬 | Apr 23, 2020' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Apr 23, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/HttpClient/HttpClientConnectionManager.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-链接池">HttpClient 链接池</a>
+      <ul>
+        <li><a href="#链接管理器-的实现">链接管理器 的实现</a></li>
+        <li><a href="#poolinghttpclientconnectionmanager">PoolingHttpClientConnectionManager</a>
+          <ul>
+            <li><a href="#构造方式">构造方式</a></li>
+            <li><a href="#获取链接">获取链接</a></li>
+            <li><a href="#关闭链接">关闭链接</a></li>
+          </ul>
+        </li>
+        <li><a href="#如何使用">如何使用</a>
+          <ul>
+            <li><a href="#基础超时配置">基础超时配置</a></li>
+            <li><a href="#链接池配置">链接池配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#http-keep-alive">HTTP Keep-Alive</a></li>
+        <li><a href="#参数配置">参数配置</a>
+          <ul>
+            <li><a href="#requestconfigcustom">RequestConfig.custom()</a></li>
+            <li><a href="#poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</a></li>
+            <li><a href="#httpclientscustom">HttpClients.custom()</a></li>
+          </ul>
+        </li>
+        <li><a href="#设置多少">设置多少？</a></li>
+        <li><a href="#性能有多少提升">性能有多少提升？</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

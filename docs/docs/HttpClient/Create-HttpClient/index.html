@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HttpClient 的创建  基于： 4.5.x
+ 继承关系  CloseableHttpClient ：4.3.x 依赖的核心接口  MinimalHttpClient ： 包访问级别， HttpClient 极简实现，核心设计的初级模型 InternalHttpClient ： 包访问级别， 通过 HttpClientBuilder 构建的 HttpClient 核心实现 AbstractHttpClient ： 标记过时，  DefaultHttpClient ： 标记过时，  ContentEncodingHttpClient ： 标记过时， SystemDefaultHttpClient ： 标记过时，       AutoRetryHttpClient ： 已过时， HttpClient 和 ServiceUnavailableRetryStrategy 的包装器，现在建议通过 HttpClientBuilder 构建 CloseableHttpClient DecompressingHttpClient ： 已过时，对请求和响应进行编码解码，DefaultHttpClient 、HttpXxxInterceptor 的包装器    可以 new 出来的 HttpClient 全都被标记为过时了 没有过时的 InternalHttpClient 、MinimalHttpClient 两个实现都是 package 级别的访问级别，外部无法直接创建 建议通过 HttpClientBuilder 进行创建，CloseableHttpClient client = HttpClientBuilder."><meta property="og:title" content="" />
+<meta property="og:description" content="HttpClient 的创建  基于： 4.5.x
+ 继承关系  CloseableHttpClient ：4.3.x 依赖的核心接口  MinimalHttpClient ： 包访问级别， HttpClient 极简实现，核心设计的初级模型 InternalHttpClient ： 包访问级别， 通过 HttpClientBuilder 构建的 HttpClient 核心实现 AbstractHttpClient ： 标记过时，  DefaultHttpClient ： 标记过时，  ContentEncodingHttpClient ： 标记过时， SystemDefaultHttpClient ： 标记过时，       AutoRetryHttpClient ： 已过时， HttpClient 和 ServiceUnavailableRetryStrategy 的包装器，现在建议通过 HttpClientBuilder 构建 CloseableHttpClient DecompressingHttpClient ： 已过时，对请求和响应进行编码解码，DefaultHttpClient 、HttpXxxInterceptor 的包装器    可以 new 出来的 HttpClient 全都被标记为过时了 没有过时的 InternalHttpClient 、MinimalHttpClient 两个实现都是 package 级别的访问级别，外部无法直接创建 建议通过 HttpClientBuilder 进行创建，CloseableHttpClient client = HttpClientBuilder." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/Create-HttpClient/" />
+<meta property="article:modified_time" content="2020-04-23T19:57:10+08:00" />
+<title>Create Http Client | Apache-Commons</title>
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/"><strong>HttpClient</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/Create-HttpClient/"class=active>构造 HttpClient</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/">_HttpClientConnectionManager</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/">HttpRequestRetryHandler</a></li>
+<li>_ClientExecChain</li>
+<li>_HttpClientBuilder</li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Create Http Client</strong>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-的创建">HttpClient 的创建</a>
+      <ul>
+        <li><a href="#继承关系">继承关系</a></li>
+        <li><a href="#httpclients-工具类">HttpClients 工具类</a></li>
+        <li><a href="#构造-closeablehttpclient">构造 CloseableHttpClient</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="httpclient-的创建">HttpClient 的创建</h1>
+<blockquote>
+<p>基于： <code>4.5.x</code></p>
+</blockquote>
+<h2 id="继承关系">继承关系</h2>
+<ul>
+<li><strong>CloseableHttpClient</strong> ：<code>4.3.x</code> 依赖的核心接口
+<ul>
+<li>MinimalHttpClient ： <strong>包访问级别</strong>， <code>HttpClient</code> <strong>极简实现</strong>，核心设计的初级模型</li>
+<li><strong>InternalHttpClient</strong> ： <strong>包访问级别</strong>， 通过  <code>HttpClientBuilder</code> 构建的 <code>HttpClient</code> <strong>核心实现</strong></li>
+<li><del>AbstractHttpClient</del> ： 标记过时，
+<ul>
+<li><del>DefaultHttpClient</del> ： 标记过时，
+<ul>
+<li><del>ContentEncodingHttpClient</del> ： 标记过时，</li>
+<li><del>SystemDefaultHttpClient</del> ： 标记过时，</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><del>AutoRetryHttpClient</del> ： 已过时， <code>HttpClient</code> 和 <code>ServiceUnavailableRetryStrategy</code> 的包装器，现在建议通过 <code>HttpClientBuilder</code> 构建 <code>CloseableHttpClient</code></li>
+<li><del>DecompressingHttpClient</del> ： 已过时，对请求和响应进行编码解码，<del><code>DefaultHttpClient</code></del> 、<code>HttpXxxInterceptor</code> 的包装器</li>
+</ul>
+<blockquote>
+<ul>
+<li>可以 <code>new</code> 出来的 <code>HttpClient</code>  全都被标记为过时了</li>
+<li>没有过时的 <strong><code>InternalHttpClient</code></strong> 、<code>MinimalHttpClient</code> 两个实现都是 <code>package</code> 级别的访问级别，外部无法直接创建</li>
+<li>建议通过 <code>HttpClientBuilder</code> 进行创建，<code>CloseableHttpClient client = HttpClientBuilder.create().xxx(配置).build();</code> 创建出来的是 <code>InternalHttpClient</code> 的实例</li>
+<li><code>HttpClients</code> 是  <code>HttpClientBuilder</code>  的封装，接口更简单 <code>CloseableHttpClient client = HttpClients.createDefault();</code> 创建出来的 <code>client</code> 都是默认配置</li>
+</ul>
+</blockquote>
+<h2 id="httpclients-工具类">HttpClients 工具类</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @since 4.3
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HttpClients</span> <span style="color:#f92672">{</span>
+
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * ❤❤❤ 自定义 HttpClientBuilder 参数 ❤❤❤ 
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> HttpClientBuilder <span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> HttpClientBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * 默认的 InternalHttpClient
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> CloseableHttpClient <span style="color:#a6e22e">createDefault</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> HttpClientBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * ❤❤❤ useSystemProperties 的作用是：支持通过 System.getProperty(&#34;&#34;) 读取系统参数（ -D ），如：
+</span><span style="color:#75715e">   * 
+</span><span style="color:#75715e">   * https： https.protocols / https.cipherSuites
+</span><span style="color:#75715e">   * 连接池相关(连接复用)： http.keepAlive(true)(DefaultMaxPerRoute) / http.maxConnections(5)(MaxTotal)
+</span><span style="color:#75715e">   * HTTP 先关： http.agent（User-Agent）默认：Apache-HttpClient/4.5.12 (Java/1.8.0_131)
+</span><span style="color:#75715e">   * 代理： SystemDefaultRoutePlanner
+</span><span style="color:#75715e">   * 安全： SystemDefaultCredentialsProvider
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> CloseableHttpClient <span style="color:#a6e22e">createSystem</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> HttpClientBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">().</span><span style="color:#a6e22e">useSystemProperties</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * MinimalHttpClient 使用 默认 Http 连接池
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> CloseableHttpClient <span style="color:#a6e22e">createMinimal</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> MinimalHttpClient<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PoolingHttpClientConnectionManager<span style="color:#f92672">());</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">/**
+</span><span style="color:#75715e">   * MinimalHttpClient，自定义 Http 连接池
+</span><span style="color:#75715e">   */</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> CloseableHttpClient <span style="color:#a6e22e">createMinimal</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpClientConnectionManager connManager<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> MinimalHttpClient<span style="color:#f92672">(</span>connManager<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="构造-closeablehttpclient">构造 CloseableHttpClient</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">RequestConfig requestConfig <span style="color:#f92672">=</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>1_000<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>2_000<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultRequestConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/8167a9ded0b7f338244d3505aea533f079930ad4" title='Last modified by 杨凯彬 | Apr 23, 2020' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Apr 23, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/HttpClient/Create-HttpClient.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#httpclient-的创建">HttpClient 的创建</a>
+      <ul>
+        <li><a href="#继承关系">继承关系</a></li>
+        <li><a href="#httpclients-工具类">HttpClients 工具类</a></li>
+        <li><a href="#构造-closeablehttpclient">构造 CloseableHttpClient</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
