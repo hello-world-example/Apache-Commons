@@ -217,7 +217,7 @@ public class DefaultHttpRequestRetryHandler implements HttpRequestRetryHandler {
 
 - HttpClient 的重试策略算是比较严格的（这下就放心了），**要想自动重试，需要满足一下条件**，发生 `IOException` 的情况下
   - **❤ 请求是幂等的：`GET`、`DELETE` ...**
-  - **❤ 请求是非幂等的：`POST`、`PUT` ... 但是数据未真正提交成功（服务端未接收到成功）** 
+  - **❤ 请求是非幂等的：`POST`、`PUT` ... 且数据未真正提交成功（服务端未接收到成功）** 
 - 以下请求**不会重试**，发生 `IOException` 的情况下
   - **❤ `POST`、`PUT` .. 请求，且数据正常发送**
   - 发生已下 `IOException` 
@@ -239,7 +239,7 @@ public class DefaultHttpRequestRetryHandler implements HttpRequestRetryHandler {
 为什么 HttpClient 会这样设计重试策略？ 可能基于以下几点，如果出现异常：
 
 - 重试是否会造成重复数据，如果不会，则尝试重试
-- 下次重试是否有可能成功？ 如果可能成功，则重试重试
+- 下次重试是否有可能成功？ 如果可能成功，则重试
 
 以上几点在实际业务中可能都不一定完全合适
 
@@ -273,7 +273,7 @@ CloseableHttpClient httpClient = HttpClients.custom()
 
 - HttpRequestRetryHandler(org.apache.http.client)
   - **DefaultHttpRequestRetryHandler** (org.apache.http.impl.client)
-    - StandardHttpRequestRetryHandler (org.apache.http.impl.client)
+    - `StandardHttpRequestRetryHandler` (org.apache.http.impl.client)
 
 
 
