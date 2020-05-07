@@ -12,8 +12,8 @@
     <artifactId>demo-httpclient</artifactId>
 
     <properties>
-        <httpcore.version>4.4.13</httpcore.version>
-        <httpclient.version>4.5.12</httpclient.version>
+        <httpcore.version>4.4.10</httpcore.version>
+        <httpclient.version>4.5.6</httpclient.version>
     </properties>
 
     <dependencies>
