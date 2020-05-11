@@ -8,7 +8,7 @@
 <meta property="og:description" content="HttpClient 链接池   HttpClient 4.5 官方文档、 官方示例   链接管理器 的实现  HttpClientConnectionManager 链接管理器  BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（synchronized） PoolingHttpClientConnectionManager ： 连接池（池化链接管理器）    PoolingHttpClientConnectionManager 构造方式 public class PoolingHttpClientConnectionManager implements HttpClientConnectionManager, // 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计  ConnPoolControl&lt;HttpRoute&gt;, Closeable { // ...  /** * @since 4.4 */ public PoolingHttpClientConnectionManager( final HttpClientConnectionOperator httpClientConnectionOperator, final HttpConnectionFactory&lt;HttpRoute, ManagedHttpClientConnection&gt; connFactory, final long timeToLive, final TimeUnit timeUnit ) { super(); // 保存 默认 SocketConfig、ConnectionConfig 和  // HttpHost 对应的 SocketConfig、ConnectionConfig  this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/" />
-<meta property="article:modified_time" content="2020-04-23T19:57:10+08:00" />
+<meta property="article:modified_time" content="2020-05-07T19:06:46+08:00" />
 <title>Http Client Connection Manager | Apache-Commons</title>
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
 
@@ -146,23 +146,11 @@ https://github.com/alex-shpak/hugo-book
           <ul>
             <li><a href="#构造方式">构造方式</a></li>
             <li><a href="#获取链接">获取链接</a></li>
-            <li><a href="#关闭链接">关闭链接</a></li>
+            <li><a href="#释放链接-">释放链接 ？？？？</a></li>
           </ul>
         </li>
-        <li><a href="#如何使用">如何使用</a>
-          <ul>
-            <li><a href="#基础超时配置">基础超时配置</a></li>
-            <li><a href="#链接池配置">链接池配置</a></li>
-          </ul>
-        </li>
+        <li><a href="#如何配置">如何配置</a></li>
         <li><a href="#http-keep-alive">HTTP Keep-Alive</a></li>
-        <li><a href="#参数配置">参数配置</a>
-          <ul>
-            <li><a href="#requestconfigcustom">RequestConfig.custom()</a></li>
-            <li><a href="#poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</a></li>
-            <li><a href="#httpclientscustom">HttpClients.custom()</a></li>
-          </ul>
-        </li>
         <li><a href="#设置多少">设置多少？</a></li>
         <li><a href="#性能有多少提升">性能有多少提升？</a></li>
         <li><a href="#read-more">Read More</a></li>
@@ -225,7 +213,7 @@ https://github.com/alex-shpak/hugo-book
 </span><span style="color:#75715e"></span>      20<span style="color:#f92672">,</span> <span style="color:#75715e">// ❤❤❤ maxTotal           即 默认合计并发 20          ❤❤❤
 </span><span style="color:#75715e"></span>      timeToLive<span style="color:#f92672">,</span> timeUnit <span style="color:#75715e">//❤❤❤ TTL 链接超时时间 ❤❤❤
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">);</span>
-    <span style="color:#75715e">// ❤❤❤❤❤❤ 两次获取间隔超过 2000ms 则检车链接可用性 ❤❤❤❤❤❤
+    <span style="color:#75715e">// ❤❤❤❤❤❤ 两次获取间隔超过 2000ms 则检测链接可用性 ❤❤❤❤❤❤
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setValidateAfterInactivity</span><span style="color:#f92672">(</span>2000<span style="color:#f92672">);</span>
     <span style="color:#75715e">// 默认 DefaultHttpClientConnectionOperator，
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connectionOperator</span> <span style="color:#f92672">=</span> Args<span style="color:#f92672">.</span><span style="color:#a6e22e">notNull</span><span style="color:#f92672">(</span>httpClientConnectionOperator<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;HttpClientConnectionOperator&#34;</span><span style="color:#f92672">);</span>
@@ -233,199 +221,247 @@ https://github.com/alex-shpak/hugo-book
   <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="获取链接">获取链接</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
-<span style="color:#66d9ef">public</span> ConnectionRequest <span style="color:#a6e22e">requestConnection</span><span style="color:#f92672">(</span>
-  <span style="color:#66d9ef">final</span> HttpRoute route<span style="color:#f92672">,</span>
-  <span style="color:#66d9ef">final</span> Object state
-<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-  <span style="color:#75715e">// .. 
-</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 从 Pool 中获取链接 Future
-</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 
-</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">final</span> Future<span style="color:#f92672">&lt;</span>CPoolEntry<span style="color:#f92672">&gt;</span> future <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lease</span><span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> state<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+<h4 id="mainclientexec">MainClientExec</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainClientExec</span> <span style="color:#66d9ef">implements</span> ClientExecChain <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> CloseableHttpResponse <span style="color:#a6e22e">execute</span><span style="color:#f92672">(...)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> HttpException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// ❤❤❤ HttpClientConnectionManager 返回的是一个回调，是对 Future 的包装
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 通过 connRequest.get &gt; pool.get 获取链接
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> ConnectionRequest connRequest <span style="color:#f92672">=</span> connManager<span style="color:#f92672">.</span><span style="color:#a6e22e">requestConnection</span><span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> userToken<span style="color:#f92672">);</span>
+    <span style="color:#75715e">// .. 判断请求是否被取消
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">final</span> RequestConfig config <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getRequestConfig</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">// ❤❤❤ 从 Pool 中获取链接的超时时间
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> timeout <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span><span style="color:#a6e22e">getConnectionRequestTimeout</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">// 调用 回调的 get 方法，获取链接
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> HttpClientConnection managedConn <span style="color:#f92672">=</span> connRequest<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>timeout <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">?</span> timeout <span style="color:#f92672">:</span> 0<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">);</span>
 
-  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ConnectionRequest<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h4 id="requestconnection">requestConnection</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PoolingHttpClientConnectionManager</span> <span style="color:#66d9ef">implements</span> <span style="color:#f92672">...</span> <span style="color:#f92672">{</span>
+  
+  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> ConnectionRequest <span style="color:#a6e22e">requestConnection</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpRoute route<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> Object state  <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// .. 
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 从 Pool(AbstractConnPool) 中获取链接 Future
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> Future<span style="color:#f92672">&lt;</span>CPoolEntry<span style="color:#f92672">&gt;</span> future <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pool</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lease</span><span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> state<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
 
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">cancel</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-      <span style="color:#66d9ef">return</span> future<span style="color:#f92672">.</span><span style="color:#a6e22e">cancel</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> HttpClientConnection <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit timeUnit<span style="color:#f92672">)</span> <span style="color:#f92672">..</span> <span style="color:#f92672">{</span>
-      <span style="color:#75715e">// future.get 过程中的异常和日志处理
-</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> HttpClientConnection conn <span style="color:#f92672">=</span> leaseConnection<span style="color:#f92672">(</span>future<span style="color:#f92672">,</span> timeout<span style="color:#f92672">,</span> timeUnit<span style="color:#f92672">);</span>
-      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>conn<span style="color:#f92672">.</span><span style="color:#a6e22e">isOpen</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// ..
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> SocketConfig socketConfig <span style="color:#f92672">=</span> resolveSocketConfig<span style="color:#f92672">(</span>host<span style="color:#f92672">);</span>
-        conn<span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>socketConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">getSoTimeout</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ConnectionRequest<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+			<span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">public</span> HttpClientConnection <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit timeUnit<span style="color:#f92672">)</span> <span style="color:#f92672">..</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// future.get 过程中的异常和日志处理
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> HttpClientConnection conn <span style="color:#f92672">=</span> leaseConnection<span style="color:#f92672">(</span>future<span style="color:#f92672">,</span> timeout<span style="color:#f92672">,</span> timeUnit<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>conn<span style="color:#f92672">.</span><span style="color:#a6e22e">isOpen</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// ..
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">final</span> SocketConfig socketConfig <span style="color:#f92672">=</span> resolveSocketConfig<span style="color:#f92672">(</span>host<span style="color:#f92672">);</span>
+          conn<span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>socketConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">getSoTimeout</span><span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> conn<span style="color:#f92672">;</span>
       <span style="color:#f92672">}</span>
-      <span style="color:#66d9ef">return</span> conn<span style="color:#f92672">;</span>
+
+    <span style="color:#f92672">};</span>
+
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h4 id="abstractconnpoollease">AbstractConnPool.lease</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> Future<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">lease</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> T route<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> Object state<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> FutureCallback<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> callback<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Future<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit tunit<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException<span style="color:#f92672">,</span> ExecutionException<span style="color:#f92672">,</span> TimeoutException <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">final</span> E entry <span style="color:#f92672">=</span> entryRef<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> entry<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+      
+      <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// ❤❤❤ 从池中获取一个 Entry 相当于链接 ❤❤❤
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">final</span> E leasedEntry <span style="color:#f92672">=</span> getPoolEntryBlocking<span style="color:#f92672">(</span>route<span style="color:#f92672">,</span> state<span style="color:#f92672">,</span> timeout<span style="color:#f92672">,</span> tunit<span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+            <span style="color:#75715e">// ❤❤❤ HttpClientBuilder.ConnectionTimeToLive ❤❤❤
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>validateAfterInactivity <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span>
+              <span style="color:#75715e">// 超过 ConnectionTimeToLive 未被使用时
+</span><span style="color:#75715e"></span>              <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">.</span><span style="color:#a6e22e">getUpdated</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> validateAfterInactivity <span style="color:#f92672">&lt;=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// 校验是否可用、释放、重新获取
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>validate<span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                  leasedEntry<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+                  release<span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+                  <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+              <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            entryRef<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">);</span>
+            done<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            onLease<span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>callback <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+              callback<span style="color:#f92672">.</span><span style="color:#a6e22e">completed</span><span style="color:#f92672">(</span>leasedEntry<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#75715e">// Future 标记为完成，返回 Entry
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> leasedEntry<span style="color:#f92672">;</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> IOException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// .. 标记为完成，抛出异常
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
   <span style="color:#f92672">};</span>
-
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="关闭链接">关闭链接</h3>
+</code></pre></div><h4 id="abstractconnpoolgetpoolentryblocking">AbstractConnPool.getPoolEntryBlocking</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> E <span style="color:#a6e22e">getPoolEntryBlocking</span><span style="color:#f92672">(</span>
+  <span style="color:#66d9ef">final</span> T route<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> Object state<span style="color:#f92672">,</span>
+  <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> TimeUnit tunit<span style="color:#f92672">,</span>
+  <span style="color:#66d9ef">final</span> Future<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> future<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> InterruptedException<span style="color:#f92672">,</span> TimeoutException <span style="color:#f92672">{</span>
+
+  Date deadline <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>timeout <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ConnectionRequestTimeout 不为空，计算截止日期（当前时间 + ConnectionRequestTimeout）
+</span><span style="color:#75715e"></span>    deadline <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date <span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> tunit<span style="color:#f92672">.</span><span style="color:#a6e22e">toMillis</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">));</span>
+  <span style="color:#f92672">}</span>
+  
+  <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">();</span>
+  <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// route 对应的 Pool，维护了以下三类集合
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Set&lt;E&gt; leased;                 以租出去占用的   
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// LinkedList&lt;E&gt; available;       未租出去可用的
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// LinkedList&lt;Future&lt;E&gt;&gt; pending; 已创建 Future 待 get 的
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> RouteSpecificPool<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">,</span> C<span style="color:#f92672">,</span> E<span style="color:#f92672">&gt;</span> pool <span style="color:#f92672">=</span> getPool<span style="color:#f92672">(</span>route<span style="color:#f92672">);</span>
+    E entry<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+      Asserts<span style="color:#f92672">.</span><span style="color:#a6e22e">check</span><span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isShutDown</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Connection pool shut down&#34;</span><span style="color:#f92672">);</span>
+      <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 获取一个空闲的链接
+</span><span style="color:#75715e"></span>        entry <span style="color:#f92672">=</span> pool<span style="color:#f92672">.</span><span style="color:#a6e22e">getFree</span><span style="color:#f92672">(</span>state<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 池中没有链接，break 当前循环走创建连接流程
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">isExpired</span><span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+          entry<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">isClosed</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">available</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+          pool<span style="color:#f92672">.</span><span style="color:#a6e22e">free</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+      
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>entry <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">available</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">leased</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+        onReuse<span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> entry<span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+
+      <span style="color:#75715e">// 当前路由配置可创建的最大链接数
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> maxPerRoute <span style="color:#f92672">=</span> getMax<span style="color:#f92672">(</span>route<span style="color:#f92672">);</span>
+      <span style="color:#75715e">// AllocatedCount（available + leased）
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> excess <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> pool<span style="color:#f92672">.</span><span style="color:#a6e22e">getAllocatedCount</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">-</span> maxPerRoute<span style="color:#f92672">);</span>
+      <span style="color:#75715e">// 已经创建的链接 &gt; 配置的最大链接数, 先缩容（所有available释放， available 大概率是 空）
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>excess <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> excess<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">final</span> E lastUsed <span style="color:#f92672">=</span> pool<span style="color:#f92672">.</span><span style="color:#a6e22e">getLastUsed</span><span style="color:#f92672">();</span>
+          <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>lastUsed <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+          <span style="color:#f92672">}</span>
+          lastUsed<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">available</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>lastUsed<span style="color:#f92672">);</span>
+          pool<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>lastUsed<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+
+      <span style="color:#75715e">// 如果还允许分配
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pool<span style="color:#f92672">.</span><span style="color:#a6e22e">getAllocatedCount</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> maxPerRoute<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> totalUsed <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">leased</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">// 配置的最大链接数 &gt; 所有 Route 正在使用的链接，
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> freeCapacity <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">maxTotal</span> <span style="color:#f92672">-</span> totalUsed<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>freeCapacity <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// ... 创建 Socket 链接
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">final</span> C conn <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">connFactory</span><span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span>route<span style="color:#f92672">);</span>
+          entry <span style="color:#f92672">=</span> pool<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>conn<span style="color:#f92672">);</span>
+          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">leased</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">);</span>
+          <span style="color:#66d9ef">return</span> entry<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+
+      <span style="color:#75715e">// 如果已经不允许分配，加入 pending 队列，等到被唤醒 或者 超时
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">boolean</span> success <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+      <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// .. future.isCancelled() 判断
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Route 的 pending 队列
+</span><span style="color:#75715e"></span>        pool<span style="color:#f92672">.</span><span style="color:#a6e22e">queue</span><span style="color:#f92672">(</span>future<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 链接池的 pending 队列
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pending</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>future<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>deadline <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// 等待到 deadline
+</span><span style="color:#75715e"></span>          success <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">condition</span><span style="color:#f92672">.</span><span style="color:#a6e22e">awaitUntil</span><span style="color:#f92672">(</span>deadline<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// 一直等待，知道成功
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">condition</span><span style="color:#f92672">.</span><span style="color:#a6e22e">await</span><span style="color:#f92672">();</span>
+          success <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#75715e">// .. future.isCancelled() 判断
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+        pool<span style="color:#f92672">.</span><span style="color:#a6e22e">unqueue</span><span style="color:#f92672">(</span>future<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pending</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>future<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span>
+      <span style="color:#75715e">// 被唤醒 或者 等待到 deadline 自己醒来后，判断是否到期
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>success <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>deadline <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> deadline<span style="color:#f92672">.</span><span style="color:#a6e22e">getTime</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// ConnectionRequestTimeout 时间内仍未获取到链接，抛出超时异常
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> TimeoutException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Timeout waiting for connection&#34;</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="释放链接-">释放链接 ？？？？</h3>
+<p>??? 为什么 <code>EntityUtils.toString(entity)</code> 执行与不执行，链接池的状态不一样</p>
+<ul>
+<li>pooling.getStats(httpRoute)</li>
+<li>pooling.getTotalStats()</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-</code></pre></div><h2 id="如何使用">如何使用</h2>
-<h3 id="基础超时配置">基础超时配置</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">RequestConfig requestConfig <span style="color:#f92672">=</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
-  <span style="color:#75715e">// 链接超时
-</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>1_000<span style="color:#f92672">)</span>
-  <span style="color:#75715e">// 读写超时
-</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>2_000<span style="color:#f92672">)</span>
+</code></pre></div><h2 id="如何配置">如何配置</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">RequestConfig config <span style="color:#f92672">=</span> RequestConfig<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>1_000<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setSocketTimeout</span><span style="color:#f92672">(</span>2_000<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// 从连接池中获取连接的超时时间
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectionRequestTimeout</span><span style="color:#f92672">(</span>1_000<span style="color:#f92672">)</span>
   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
 
 CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<span style="color:#f92672">.</span><span style="color:#a6e22e">custom</span><span style="color:#f92672">()</span>
-  <span style="color:#75715e">// ❤❤❤ 默认配置
-</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultRequestConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">setDefaultRequestConfig</span><span style="color:#f92672">(</span>config<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// 会覆盖 pooling.setMaxTotal
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setMaxConnTotal</span><span style="color:#f92672">(</span>2000<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// 会覆盖 pooling.setDefaultMaxPerRoute
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setMaxConnPerRoute</span><span style="color:#f92672">(</span>1000<span style="color:#f92672">)</span>
+  <span style="color:#75715e">// 链接过期时间
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectionTimeToLive</span><span style="color:#f92672">(</span>10<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">SECONDS</span><span style="color:#f92672">)</span>
   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
-
-HttpRequestBase request <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HttpGet<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
-<span style="color:#75715e">// ❤❤❤ 可覆盖 默认配置
-</span><span style="color:#75715e"></span>request<span style="color:#f92672">.</span><span style="color:#a6e22e">setConfig</span><span style="color:#f92672">(</span>requestConfig<span style="color:#f92672">);</span>
-
-httpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>request<span style="color:#f92672">);</span>
-</code></pre></div><h3 id="链接池配置">链接池配置</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
 </code></pre></div><h2 id="http-keep-alive">HTTP Keep-Alive</h2>
 <ul>
 <li>HTTP/1.0通过在 Header 中添加 <code>Connection:Keep-Alive</code> 来表示支持长连接</li>
 <li>HTTP/1.1<strong>默认支持长连接</strong>, 除非在 Header 中显式指定 <code>Connection:Close</code> , 才被视为短连接模式</li>
 </ul>
-<h2 id="参数配置">参数配置</h2>
-<h3 id="requestconfigcustom">RequestConfig.custom()</h3>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th align="center">默认</th>
-<th align="center">建议</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>connectTimeout</code></td>
-<td align="center"><code>-1</code></td>
-<td align="center"><code>500</code></td>
-<td>客户端和服务器建立连接的超时时间</td>
-</tr>
-<tr>
-<td><code>socketTimeout</code></td>
-<td align="center"><code>-1</code></td>
-<td align="center"><code>2000</code></td>
-<td>客户端从服务器读取数据的超时时间</td>
-</tr>
-<tr>
-<td><code>connectionRequestTimeout</code></td>
-<td align="center"><code>-1</code></td>
-<td align="center"></td>
-<td>从连接池中获取连接的超时时间</td>
-</tr>
-</tbody>
-</table>
-<h3 id="poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</h3>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th align="center">默认</th>
-<th align="center">建议</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxTotal</code></td>
-<td align="center"><code>0</code></td>
-<td align="center"></td>
-<td>整个链接池的最大链接数</td>
-</tr>
-<tr>
-<td><code>defaultMaxPerRoute</code></td>
-<td align="center"><code>0</code></td>
-<td align="center"></td>
-<td>某个主机的最大连接数，所有主机加起来不能超过，MAX_CONNECTION_TOTAL</td>
-</tr>
-<tr>
-<td>RETRY_COUNT</td>
-<td align="center">3</td>
-<td align="center"></td>
-<td>重试次数</td>
-</tr>
-<tr>
-<td>CONNECTION_IDLE_TIME_OUT</td>
-<td align="center">5000</td>
-<td align="center"></td>
-<td>闲置的连接的时间阀值</td>
-</tr>
-<tr>
-<td>DEFAULT_KEEP_ALIVE_TIME_MILLIS</td>
-<td align="center">20 * 1000</td>
-<td align="center"></td>
-<td>默认保活时间</td>
-</tr>
-</tbody>
-</table>
-<h3 id="httpclientscustom">HttpClients.custom()</h3>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th align="center">默认</th>
-<th align="center">建议</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>maxConnTotal</code></td>
-<td align="center"><code>0</code></td>
-<td align="center"></td>
-<td>整个链接池的最大链接数</td>
-</tr>
-<tr>
-<td><code>maxConnPerRoute</code></td>
-<td align="center"><code>0</code></td>
-<td align="center"></td>
-<td>某个主机的最大连接数，所有主机加起来不能超过，MAX_CONNECTION_TOTAL</td>
-</tr>
-<tr>
-<td>RETRY_COUNT</td>
-<td align="center">3</td>
-<td align="center"></td>
-<td>重试次数</td>
-</tr>
-<tr>
-<td>CONNECTION_IDLE_TIME_OUT</td>
-<td align="center">5000</td>
-<td align="center"></td>
-<td>闲置的连接的时间阀值</td>
-</tr>
-<tr>
-<td>DEFAULT_KEEP_ALIVE_TIME_MILLIS</td>
-<td align="center">20 * 1000</td>
-<td align="center"></td>
-<td>默认保活时间</td>
-</tr>
-</tbody>
-</table>
 <h2 id="设置多少">设置多少？</h2>
 <h2 id="性能有多少提升">性能有多少提升？</h2>
 <h2 id="read-more">Read More</h2>
 <ul>
+<li>Confluence 
+  <a href="https://yq.aliyun.com/articles/93801">Httpclient 核心架构设计</a></li>
 <li>
   <a href="https://mp.weixin.qq.com/s/e29_LFHFAMcvrZpOJ9y2kw">HttpClient 连接池也能这样用</a></li>
 <li>
   <a href="https://mp.weixin.qq.com/s/Bg9Jc7x64j_-sSPhvScQ0g">HttpClient 连接池设置引发的一次雪崩</a></li>
 <li>
   <a href="https://www.cnblogs.com/kingszelda/p/8988505.html">Http 持久连接与 HttpClient连接池</a></li>
-<li>TODO <a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8130736">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8130736</a> 记一次 HttpClient 死锁问题</li>
-<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=9155747">http://confluence.ttpai.cn/pages/viewpage.action?pageId=9155747</a> 高并发场景下的httpClient优化使用</li>
-<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8154751">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8154751</a> HttpClient你不一定会用</li>
-<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=9156972">http://confluence.ttpai.cn/pages/viewpage.action?pageId=9156972</a></li>
-<li><a href="http://confluence.ttpai.cn/pages/viewpage.action?pageId=8158882">http://confluence.ttpai.cn/pages/viewpage.action?pageId=8158882</a> HttpClient 4.4 无法携带 Cookies 问题</li>
 <li><a href="https://www.jianshu.com/p/14c005e9287c">https://www.jianshu.com/p/14c005e9287c</a></li>
 </ul>
 </article>
@@ -440,9 +476,9 @@ httpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">execut
 
   <div>
     
-    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/8167a9ded0b7f338244d3505aea533f079930ad4" title='Last modified by 杨凯彬 | Apr 23, 2020' target="_blank" rel="noopener">
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/bed54b70d4d7a7f73b00fb99ac395f427566ff44" title='Last modified by 杨凯彬 | May 7, 2020' target="_blank" rel="noopener">
       <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
-      <span>Apr 23, 2020</span>
+      <span>May 7, 2020</span>
     </a>
   </div>
 
@@ -484,23 +520,11 @@ httpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">execut
           <ul>
             <li><a href="#构造方式">构造方式</a></li>
             <li><a href="#获取链接">获取链接</a></li>
-            <li><a href="#关闭链接">关闭链接</a></li>
+            <li><a href="#释放链接-">释放链接 ？？？？</a></li>
           </ul>
         </li>
-        <li><a href="#如何使用">如何使用</a>
-          <ul>
-            <li><a href="#基础超时配置">基础超时配置</a></li>
-            <li><a href="#链接池配置">链接池配置</a></li>
-          </ul>
-        </li>
+        <li><a href="#如何配置">如何配置</a></li>
         <li><a href="#http-keep-alive">HTTP Keep-Alive</a></li>
-        <li><a href="#参数配置">参数配置</a>
-          <ul>
-            <li><a href="#requestconfigcustom">RequestConfig.custom()</a></li>
-            <li><a href="#poolinghttpclientconnectionmanager-1">PoolingHttpClientConnectionManager</a></li>
-            <li><a href="#httpclientscustom">HttpClients.custom()</a></li>
-          </ul>
-        </li>
         <li><a href="#设置多少">设置多少？</a></li>
         <li><a href="#性能有多少提升">性能有多少提升？</a></li>
         <li><a href="#read-more">Read More</a></li>

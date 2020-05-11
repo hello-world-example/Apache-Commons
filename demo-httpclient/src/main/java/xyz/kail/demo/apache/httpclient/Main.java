@@ -59,8 +59,6 @@ public class Main {
     }
 
     static void request() throws IOException {
-//        HttpRoute httpRoute = new HttpRoute(new HttpHost("pubapi.ttpai.cn", 80));
-//        HttpGet httpGet = new HttpGet("http://pubapi.ttpai.cn/v1.0/auction/state?appid=10000&auctionId=45645457");
         HttpRoute httpRoute = new HttpRoute(new HttpHost("www.baidu.com", 80));
         HttpGet httpGet = new HttpGet("http://www.baidu.com");
 
