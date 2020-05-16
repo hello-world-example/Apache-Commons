@@ -15,7 +15,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://hello-world-example.github.io/Apache-Commons/_sidebar/</guid>
-      <description>  HttpClient   构造 HttpClient  _HttpClientConnectionManager  HttpRequestRetryHandler _ClientExecChain _HttpClientBuilder    Codec  Compress   TarUtil    Configuration   快速开始指南  Properties 文件  Yaml 文件  自动加载  运行时依赖    Ognl  Pool   入门示例  GenericObjectPoolConfig 配置项    </description>
+      <description>  HttpClient   构造 HttpClient  HttpRequestRetryHandler  链接复用 和 KeepAlive 策略  _HttpClientConnectionManager _ClientExecChain _HttpClientBuilder    Codec  Compress   TarUtil    Configuration   快速开始指南  Properties 文件  Yaml 文件  自动加载  运行时依赖    Ognl  Pool   入门示例  GenericObjectPoolConfig 配置项    </description>
     </item>
     
     <item>
@@ -80,6 +80,15 @@ Configurations configs = new Configurations(); URL databaseRes = ClassLoader.get
       
       <guid>https://hello-world-example.github.io/Apache-Commons/docs/Configuration/Yaml/</guid>
       <description>操作 YAML 文件 新增依赖 &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.yaml&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;snakeyaml&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.24&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; my.yaml spring: application: name: spring-${person.name} person: name: Kail age: 27 代码示例 URL myYaml = ClassLoader.getSystemResource(&amp;#34;my.yaml&amp;#34;); Configurations configurations = new Configurations(); YAMLConfiguration configuration = configurations.fileBased(YAMLConfiguration.class, myYaml); String string = configuration.getString(&amp;#34;spring.application.name&amp;#34;); </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/</guid>
+      <description>链接复用 和 KeepAlive 策略  ConnectionReuseStrategy 连接复用策略 来决定连接使用之后是否应给被回收 ConnectionKeepAliveStrategy KeepAlive 策略 来决定，连接的存活时间  HttpClientBuilder.build() // 连接复用策略 ConnectionReuseStrategy reuseStrategyCopy = this.reuseStrategy; // 如果没有 明确指定 时的默认行为 if (reuseStrategyCopy == null) { // systemProperties 默认是 false，通过 useSystemProperties() 激活  if (systemProperties) { final String s = System.getProperty(&amp;#34;http.keepAlive&amp;#34;, &amp;#34;true&amp;#34;); if (&amp;#34;true&amp;#34;.equalsIgnoreCase(s)) { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } else { reuseStrategyCopy = NoConnectionReuseStrategy.INSTANCE; } } else { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } } // KeepAlive 策略 ConnectionKeepAliveStrategy keepAliveStrategyCopy = this.</description>
     </item>
     
     <item>

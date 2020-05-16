@@ -11,6 +11,15 @@
     
     <item>
       <title></title>
+      <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/</guid>
+      <description>链接复用 和 KeepAlive 策略  ConnectionReuseStrategy 连接复用策略 来决定连接使用之后是否应给被回收 ConnectionKeepAliveStrategy KeepAlive 策略 来决定，连接的存活时间  HttpClientBuilder.build() // 连接复用策略 ConnectionReuseStrategy reuseStrategyCopy = this.reuseStrategy; // 如果没有 明确指定 时的默认行为 if (reuseStrategyCopy == null) { // systemProperties 默认是 false，通过 useSystemProperties() 激活  if (systemProperties) { final String s = System.getProperty(&amp;#34;http.keepAlive&amp;#34;, &amp;#34;true&amp;#34;); if (&amp;#34;true&amp;#34;.equalsIgnoreCase(s)) { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } else { reuseStrategyCopy = NoConnectionReuseStrategy.INSTANCE; } } else { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } } // KeepAlive 策略 ConnectionKeepAliveStrategy keepAliveStrategyCopy = this.</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/Create-HttpClient/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="链接复用 和 KeepAlive 策略  ConnectionReuseStrategy 连接复用策略 来决定连接使用之后是否应给被回收 ConnectionKeepAliveStrategy KeepAlive 策略 来决定，连接的存活时间  HttpClientBuilder.build() // 连接复用策略 ConnectionReuseStrategy reuseStrategyCopy = this.reuseStrategy; // 如果没有 明确指定 时的默认行为 if (reuseStrategyCopy == null) { // systemProperties 默认是 false，通过 useSystemProperties() 激活  if (systemProperties) { final String s = System.getProperty(&#34;http.keepAlive&#34;, &#34;true&#34;); if (&#34;true&#34;.equalsIgnoreCase(s)) { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } else { reuseStrategyCopy = NoConnectionReuseStrategy.INSTANCE; } } else { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } } // KeepAlive 策略 ConnectionKeepAliveStrategy keepAliveStrategyCopy = this."><meta property="og:title" content="" />
+<meta property="og:description" content="链接复用 和 KeepAlive 策略  ConnectionReuseStrategy 连接复用策略 来决定连接使用之后是否应给被回收 ConnectionKeepAliveStrategy KeepAlive 策略 来决定，连接的存活时间  HttpClientBuilder.build() // 连接复用策略 ConnectionReuseStrategy reuseStrategyCopy = this.reuseStrategy; // 如果没有 明确指定 时的默认行为 if (reuseStrategyCopy == null) { // systemProperties 默认是 false，通过 useSystemProperties() 激活  if (systemProperties) { final String s = System.getProperty(&#34;http.keepAlive&#34;, &#34;true&#34;); if (&#34;true&#34;.equalsIgnoreCase(s)) { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } else { reuseStrategyCopy = NoConnectionReuseStrategy.INSTANCE; } } else { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } } // KeepAlive 策略 ConnectionKeepAliveStrategy keepAliveStrategyCopy = this." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/" />
+
+<title>Connection Reuse Strategy Connection Keep Alive Strategy | Apache-Commons</title>
+<link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Apache-Commons/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Apache-Commons"><span>Apache-Commons</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/"><strong>HttpClient</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/Create-HttpClient/">构造 HttpClient</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpRequestRetryHandler/">HttpRequestRetryHandler</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/"class=active>链接复用 和 KeepAlive 策略</a></li>
+<li>
+  <a href="/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/">_HttpClientConnectionManager</a></li>
+<li>_ClientExecChain</li>
+<li>_HttpClientBuilder</li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Codec/"><strong>Codec</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Compress/"><strong>Compress</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Compress/tar/">TarUtil</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/"><strong>Configuration</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Quick-Start-Guide/">快速开始指南</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Properties/">Properties 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Yaml/">Yaml 文件</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Auto-Reload/">自动加载</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Configuration/Dependencies/">运行时依赖</a></li>
+</ul>
+</li>
+<li>
+  <a href="/Apache-Commons/docs/Ognl/"><strong>Ognl</strong></a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/"><strong>Pool</strong></a>
+<ul>
+<li>
+  <a href="/Apache-Commons/docs/Pool/Simple-Exmaple/">入门示例</a></li>
+<li>
+  <a href="/Apache-Commons/docs/Pool/GenericObjectPoolConfig/">GenericObjectPoolConfig 配置项</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Apache-Commons/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Connection Reuse Strategy Connection Keep Alive Strategy</strong>
+
+  <label for="toc-control">
+    <img src="/Apache-Commons/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#链接复用-和-keepalive-策略">链接复用 和 KeepAlive 策略</a>
+      <ul>
+        <li><a href="#httpclientbuilderbuild">HttpClientBuilder.build()</a></li>
+        <li><a href="#defaultclientconnectionreusestrategy">DefaultClientConnectionReuseStrategy</a>
+          <ul>
+            <li><a href="#defaultconnectionreusestrategy-httpcore">DefaultConnectionReuseStrategy (httpcore)</a></li>
+          </ul>
+        </li>
+        <li><a href="#defaultconnectionkeepalivestrategy">DefaultConnectionKeepAliveStrategy</a></li>
+        <li><a href="#策略的配合">策略的配合</a>
+          <ul>
+            <li><a href="#mainclientexec">MainClientExec</a></li>
+            <li><a href="#connectionholderreleaseconnection">ConnectionHolder.releaseConnection</a></li>
+          </ul>
+        </li>
+        <li><a href="#小结">小结</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="链接复用-和-keepalive-策略">链接复用 和 KeepAlive 策略</h1>
+<ul>
+<li><code>ConnectionReuseStrategy</code> 连接复用策略 来决定连接使用之后是否应给被回收</li>
+<li><code>ConnectionKeepAliveStrategy</code> KeepAlive 策略 来决定，连接的存活时间</li>
+</ul>
+<h2 id="httpclientbuilderbuild">HttpClientBuilder.build()</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 连接复用策略
+</span><span style="color:#75715e"></span>ConnectionReuseStrategy reuseStrategyCopy <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">reuseStrategy</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">// 如果没有 明确指定 时的默认行为
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>reuseStrategyCopy <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// systemProperties 默认是 false，通过 useSystemProperties() 激活
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>systemProperties<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">final</span> String s <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http.keepAlive&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span>s<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+      reuseStrategyCopy <span style="color:#f92672">=</span> DefaultClientConnectionReuseStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      reuseStrategyCopy <span style="color:#f92672">=</span> NoConnectionReuseStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+    reuseStrategyCopy <span style="color:#f92672">=</span> DefaultClientConnectionReuseStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// KeepAlive 策略
+</span><span style="color:#75715e"></span>ConnectionKeepAliveStrategy keepAliveStrategyCopy <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">keepAliveStrategy</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">// 如果没有 明确指定 时的默认行为
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keepAliveStrategyCopy <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  keepAliveStrategyCopy <span style="color:#f92672">=</span> DefaultConnectionKeepAliveStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="defaultclientconnectionreusestrategy">DefaultClientConnectionReuseStrategy</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultClientConnectionReuseStrategy</span> <span style="color:#66d9ef">extends</span> DefaultConnectionReuseStrategy <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">keepAlive</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpResponse response<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> HttpContext context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 上下文中获取 http.request 请求信息（一般可获取到）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> HttpRequest request <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>HttpRequest<span style="color:#f92672">)</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getAttribute</span><span style="color:#f92672">(</span>HttpCoreContext<span style="color:#f92672">.</span><span style="color:#a6e22e">HTTP_REQUEST</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>request <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 获取 Connection 请求头
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 默认请求头【Connection: Keep-Alive】默认是 Keep-Alive 
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 如果请求头【Connection: Close】不复用连接
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> Header<span style="color:#f92672">[]</span> connHeaders <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span><span style="color:#a6e22e">getHeaders</span><span style="color:#f92672">(</span>HttpHeaders<span style="color:#f92672">.</span><span style="color:#a6e22e">CONNECTION</span><span style="color:#f92672">);</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>connHeaders<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> TokenIterator ti <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BasicTokenIterator<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> BasicHeaderIterator<span style="color:#f92672">(</span>connHeaders<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">));</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>ti<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">final</span> String token <span style="color:#f92672">=</span> ti<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">();</span>
+          <span style="color:#75715e">// 如果【Connection: Close】不复用连接
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONN_CLOSE</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span>token<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// DefaultConnectionReuseStrategy 的 复用策略
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">keepAlive</span><span style="color:#f92672">(</span>response<span style="color:#f92672">,</span> context<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="defaultconnectionreusestrategy-httpcore">DefaultConnectionReuseStrategy (httpcore)</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultConnectionReuseStrategy</span> <span style="color:#66d9ef">implements</span> ConnectionReuseStrategy <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">keepAlive</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpResponse response<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> HttpContext context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ①
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 【不符合规范的情况】 状态码是 204， 说明没有响应内容
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>response<span style="color:#f92672">.</span><span style="color:#a6e22e">getStatusLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getStatusCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> HttpStatus<span style="color:#f92672">.</span><span style="color:#a6e22e">SC_NO_CONTENT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 204 但是 Content-length 却 &gt; 0， 说明有内容，与 204 状态不符【不复用连接】
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> Header clh <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getFirstHeader</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONTENT_LEN</span><span style="color:#f92672">);</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>clh <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>clh<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">())</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+			<span style="color:#75715e">// 204 但是 Transfer-Encoding 不为空，与 204 状态不符【不复用连接】
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 最新的 HTTP 规范里，只定义了一种传输编码：Transfer-Encoding: chunked 分块传输
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> Header teh <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getFirstHeader</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">TRANSFER_ENCODING</span><span style="color:#f92672">);</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>teh <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// ②
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 与 DefaultClientConnectionReuseStrategy 中的逻辑基本一致，即：
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 请求头【Connection: Keep-Alive】复用，【Connection: Close】不复用，默认复用
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> HttpRequest request <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>HttpRequest<span style="color:#f92672">)</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getAttribute</span><span style="color:#f92672">(</span>HttpCoreContext<span style="color:#f92672">.</span><span style="color:#a6e22e">HTTP_REQUEST</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>request <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> TokenIterator ti <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BasicTokenIterator<span style="color:#f92672">(</span>request<span style="color:#f92672">.</span><span style="color:#a6e22e">headerIterator</span><span style="color:#f92672">(</span>HttpHeaders<span style="color:#f92672">.</span><span style="color:#a6e22e">CONNECTION</span><span style="color:#f92672">));</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>ti<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">final</span> String token <span style="color:#f92672">=</span> ti<span style="color:#f92672">.</span><span style="color:#a6e22e">nextToken</span><span style="color:#f92672">();</span>
+          <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONN_CLOSE</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span>token<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> ParseException px<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// invalid connection header. do not re-use
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// ③
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> ProtocolVersion ver <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getStatusLine</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getProtocolVersion</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">// Transfer-Encoding
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> Header teh <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getFirstHeader</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">TRANSFER_ENCODING</span><span style="color:#f92672">);</span>
+    <span style="color:#75715e">// 默认是 null
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>teh <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// Transfer-Encoding != chunked【不复用】
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CHUNK_CODING</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span>teh<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 【不符合规范的情况】有响应内容，但是 Content-Length 却是 负数，不复用
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>canResponseHaveBody<span style="color:#f92672">(</span>request<span style="color:#f92672">,</span> response<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> Header<span style="color:#f92672">[]</span> clhs <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getHeaders</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONTENT_LEN</span><span style="color:#f92672">);</span>
+        <span style="color:#75715e">// Do not reuse if not properly content-length delimited
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>clhs<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">final</span> Header clh <span style="color:#f92672">=</span> clhs<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+          <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> contentLen <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>clh<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">());</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>contentLen <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+              <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+          <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> NumberFormatException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+          <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//       Connection 用于说明与 直连服务器 的链接情况，常见如：close、Keep-Alive
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Proxy-Connection 用于说明与 代理服务器 的链接情况，值同上
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Proxy-Connetion 出现的意义是为了前后兼容，详见 Read More
+</span><span style="color:#75715e"></span>    HeaderIterator headerIterator <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">headerIterator</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONN_DIRECTIVE</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>headerIterator<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      headerIterator <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">headerIterator</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Proxy-Connection&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">// 默认 HTTP/1.1 复用, HTTP/1.0 不复用
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>ver<span style="color:#f92672">.</span><span style="color:#a6e22e">lessEquals</span><span style="color:#f92672">(</span>HttpVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">HTTP_1_0</span><span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><h2 id="defaultconnectionkeepalivestrategy">DefaultConnectionKeepAliveStrategy</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DefaultConnectionKeepAliveStrategy</span> <span style="color:#66d9ef">implements</span> ConnectionKeepAliveStrategy <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// ... 获取连接保持的时间
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">getKeepAliveDuration</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> HttpResponse response<span style="color:#f92672">,</span> <span style="color:#66d9ef">final</span> HttpContext context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 获取 Keep-Alive 响应头
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Spring Boot 1【无，无限时长】
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Spring Boot 2【Keep-Alive: timeout=60】
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> HeaderElementIterator it <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BasicHeaderElementIterator<span style="color:#f92672">(</span>response<span style="color:#f92672">.</span><span style="color:#a6e22e">headerIterator</span><span style="color:#f92672">(</span>HTTP<span style="color:#f92672">.</span><span style="color:#a6e22e">CONN_KEEP_ALIVE</span><span style="color:#f92672">));</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>it<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">final</span> HeaderElement he <span style="color:#f92672">=</span> it<span style="color:#f92672">.</span><span style="color:#a6e22e">nextElement</span><span style="color:#f92672">();</span>
+      <span style="color:#75715e">// timeout
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> String param <span style="color:#f92672">=</span> he<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+      <span style="color:#75715e">// 60s
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> String value <span style="color:#f92672">=</span> he<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>value <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> param<span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;timeout&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> Long<span style="color:#f92672">.</span><span style="color:#a6e22e">parseLong</span><span style="color:#f92672">(</span>value<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> 1000<span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// 默认无限
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="策略的配合">策略的配合</h2>
+<h3 id="mainclientexec">MainClientExec</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">// 使用连接获取响应之后
+</span><span style="color:#75715e"></span>response <span style="color:#f92672">=</span> requestExecutor<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>request<span style="color:#f92672">,</span> managedConn<span style="color:#f92672">,</span> context<span style="color:#f92672">);</span>
+
+<span style="color:#75715e">// 连接复用策略，查看是否可复用
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>reuseStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">keepAlive</span><span style="color:#f92672">(</span>response<span style="color:#f92672">,</span> context<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// keepAlive 策略，获取保持时间
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> duration <span style="color:#f92672">=</span> keepAliveStrategy<span style="color:#f92672">.</span><span style="color:#a6e22e">getKeepAliveDuration</span><span style="color:#f92672">(</span>response<span style="color:#f92672">,</span> context<span style="color:#f92672">);</span>
+  <span style="color:#75715e">// ... 
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// 链接续期
+</span><span style="color:#75715e"></span>  connHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">setValidFor</span><span style="color:#f92672">(</span>duration<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">);</span>
+  <span style="color:#75715e">// 标记为复用
+</span><span style="color:#75715e"></span>  connHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">markReusable</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// 标记为不可复用
+</span><span style="color:#75715e"></span>  connHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">markNonReusable</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// ... 使用之后都会释放连接，根据是否复用来 真实关闭链接 或 放入链接池中
+</span><span style="color:#75715e"></span>connHolder<span style="color:#f92672">.</span><span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">();</span>
+</code></pre></div><h3 id="connectionholderreleaseconnection">ConnectionHolder.releaseConnection</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#75715e">// 连接被标记为复用
+</span><span style="color:#75715e"></span>  releaseConnection<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">reusable</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+
+
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> reusable<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">released</span><span style="color:#f92672">.</span><span style="color:#a6e22e">compareAndSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">managedConn</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>reusable<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 如果链接可复用，放入连接池（manager 默认是 PoolingHttpClientConnectionManager ）
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">manager</span><span style="color:#f92672">.</span><span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">managedConn</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">state</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">validDuration</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tunit</span><span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// 如果不可复用，关闭 TCP 链接
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">managedConn</span><span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+          <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">// 放入连接池，但是连接有效时间是 0，会从 池中清除
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">manager</span><span style="color:#f92672">.</span><span style="color:#a6e22e">releaseConnection</span><span style="color:#f92672">(</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">managedConn</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="小结">小结</h2>
+<ul>
+<li>HTTP/1.0 默认不支持持久连接，请求头 必须添加 <code>Connecttion: Keep-Alive</code> 来协商持久连接，<strong>服务端返回同样的内容</strong>，这个连接就会被保持供后续使用</li>
+<li>HTTP/1.1，除了显式自定 <code>Connection: close</code>，默认都是持久连接，<code>Connection: Keep-Alive</code> 已经失去意义了</li>
+<li>HttpClient 的链接保持除了遵循 HTTP 规范外，还对异常情况进行校验，不符合规范的链接，不复用被回收</li>
+<li><code>Connection:Keep-Alive</code> 表示链接保持，配合 <code>Keep-Alive: timeout=60</code> 表明链接保持的空闲时间间隔，空闲时间超过 60秒之后，就会失效，60s 内 再次使用此连接，则连接仍然有效，使用完之后，重新计数</li>
+<li>默认是长连接，如果没有 <code>Keep-Alive: timeout=xxx</code>，默认无限期使用</li>
+<li>HTTP 头信息，不区分大小写</li>
+</ul>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li>
+  <a href="https://imququ.com/post/transfer-encoding-header-in-http.html">HTTP 协议中的 Transfer-Encoding</a></li>
+<li>
+  <a href="https://imququ.com/post/the-proxy-connection-header-in-http-request.html">Http 请求头中的 Proxy-Connection</a></li>
+<li>
+  <a href="https://www.cnblogs.com/shoren/p/http-connection.html">HTTP长连接、短连接使用及测试</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/edit/master/HuGo/content/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy.md" target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#链接复用-和-keepalive-策略">链接复用 和 KeepAlive 策略</a>
+      <ul>
+        <li><a href="#httpclientbuilderbuild">HttpClientBuilder.build()</a></li>
+        <li><a href="#defaultclientconnectionreusestrategy">DefaultClientConnectionReuseStrategy</a>
+          <ul>
+            <li><a href="#defaultconnectionreusestrategy-httpcore">DefaultConnectionReuseStrategy (httpcore)</a></li>
+          </ul>
+        </li>
+        <li><a href="#defaultconnectionkeepalivestrategy">DefaultConnectionKeepAliveStrategy</a></li>
+        <li><a href="#策略的配合">策略的配合</a>
+          <ul>
+            <li><a href="#mainclientexec">MainClientExec</a></li>
+            <li><a href="#connectionholderreleaseconnection">ConnectionHolder.releaseConnection</a></li>
+          </ul>
+        </li>
+        <li><a href="#小结">小结</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

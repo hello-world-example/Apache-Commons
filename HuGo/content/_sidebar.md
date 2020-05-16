@@ -4,8 +4,9 @@ headless: true
 
 - [**HttpClient**]({{< relref "/docs/HttpClient/_index.md" >}})
     - [构造 HttpClient]({{< relref "/docs/HttpClient/Create-HttpClient.md" >}})
-    - [_HttpClientConnectionManager]({{< relref "/docs/HttpClient/HttpClientConnectionManager.md" >}})
     - [HttpRequestRetryHandler]({{< relref "/docs/HttpClient/HttpRequestRetryHandler.md" >}})
+    - [链接复用 和 KeepAlive 策略]({{< relref "/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy.md" >}})
+    - [_HttpClientConnectionManager]({{< relref "/docs/HttpClient/HttpClientConnectionManager.md" >}})
     - _ClientExecChain
     - _HttpClientBuilder
 - [**Codec**]({{< relref "/docs/Codec/_index.md" >}})

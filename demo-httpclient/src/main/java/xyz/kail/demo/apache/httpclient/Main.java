@@ -39,6 +39,7 @@ public class Main {
         httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(config)
                 .setConnectionManager(pooling)
+                .useSystemProperties()
                 .build();
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);

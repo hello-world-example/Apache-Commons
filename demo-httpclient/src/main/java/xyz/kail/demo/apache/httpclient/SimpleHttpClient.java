@@ -25,12 +25,10 @@ public class SimpleHttpClient {
             .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(500).setSocketTimeout(2_000).build())
             .build();
 
-        HttpRequestBase request = new HttpGet("");
+        HttpRequestBase request = new HttpGet("http://www.baidu.com");
         request.setConfig(requestConfig);
 
-        httpClient.execute(request);
-
-        CloseableHttpClient client = HttpClients.createDefault();
+        CloseableHttpResponse execute = httpClient.execute(request);
 
 
     }
