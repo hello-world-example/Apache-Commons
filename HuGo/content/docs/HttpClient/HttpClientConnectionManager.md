@@ -307,17 +307,6 @@ CloseableHttpClient httpClient = HttpClients.custom()
 
 
 
-## HTTP Keep-Alive
-
-- HTTP/1.0通过在 Header 中添加 `Connection:Keep-Alive` 来表示支持长连接
-- HTTP/1.1**默认支持长连接**, 除非在 Header 中显式指定 `Connection:Close` , 才被视为短连接模式
-
-
-
-## 设置多少？
-
-## 性能有多少提升？
-
 ## Read More
 
 - Confluence [Httpclient 核心架构设计](https://yq.aliyun.com/articles/93801)

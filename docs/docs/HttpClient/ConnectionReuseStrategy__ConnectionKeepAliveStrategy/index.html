@@ -8,7 +8,7 @@
 <meta property="og:description" content="链接复用 和 KeepAlive 策略  ConnectionReuseStrategy 连接复用策略 来决定连接使用之后是否应给被回收 ConnectionKeepAliveStrategy KeepAlive 策略 来决定，连接的存活时间  HttpClientBuilder.build() // 连接复用策略 ConnectionReuseStrategy reuseStrategyCopy = this.reuseStrategy; // 如果没有 明确指定 时的默认行为 if (reuseStrategyCopy == null) { // systemProperties 默认是 false，通过 useSystemProperties() 激活  if (systemProperties) { final String s = System.getProperty(&#34;http.keepAlive&#34;, &#34;true&#34;); if (&#34;true&#34;.equalsIgnoreCase(s)) { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } else { reuseStrategyCopy = NoConnectionReuseStrategy.INSTANCE; } } else { reuseStrategyCopy = DefaultClientConnectionReuseStrategy.INSTANCE; } } // KeepAlive 策略 ConnectionKeepAliveStrategy keepAliveStrategyCopy = this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/ConnectionReuseStrategy__ConnectionKeepAliveStrategy/" />
-
+<meta property="article:modified_time" content="2020-05-17T04:13:36+08:00" />
 <title>Connection Reuse Strategy Connection Keep Alive Strategy | Apache-Commons</title>
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
 
@@ -415,6 +415,14 @@ https://github.com/alex-shpak/hugo-book
   <div class="flex justify-between">
 
 
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/aa97b266628790bfba3f0aded91f4ac58f103ea9" title='Last modified by 杨凯彬 | May 17, 2020' target="_blank" rel="noopener">
+      <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>May 17, 2020</span>
+    </a>
+  </div>
 
 
 
