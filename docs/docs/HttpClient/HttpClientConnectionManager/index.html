@@ -8,7 +8,7 @@
 <meta property="og:description" content="HttpClient 链接池   HttpClient 4.5 官方文档、 官方示例   链接管理器 的实现  HttpClientConnectionManager 链接管理器  BasicHttpClientConnectionManager ：只维护一个连接，且是只能单线程访问（synchronized） PoolingHttpClientConnectionManager ： 连接池（池化链接管理器）    PoolingHttpClientConnectionManager 构造方式 public class PoolingHttpClientConnectionManager implements HttpClientConnectionManager, // 定义了 如何设置 总计最大链接数、每个 Host 的最大链接数，获取 PoolStats 统计  ConnPoolControl&lt;HttpRoute&gt;, Closeable { // ...  /** * @since 4.4 */ public PoolingHttpClientConnectionManager( final HttpClientConnectionOperator httpClientConnectionOperator, final HttpConnectionFactory&lt;HttpRoute, ManagedHttpClientConnection&gt; connFactory, final long timeToLive, final TimeUnit timeUnit ) { super(); // 保存 默认 SocketConfig、ConnectionConfig 和  // HttpHost 对应的 SocketConfig、ConnectionConfig  this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/Apache-Commons/docs/HttpClient/HttpClientConnectionManager/" />
-<meta property="article:modified_time" content="2020-05-11T10:16:13+08:00" />
+<meta property="article:modified_time" content="2020-05-17T04:14:12+08:00" />
 <title>Http Client Connection Manager | Apache-Commons</title>
 <link rel="icon" href="/Apache-Commons/favicon.png" type="image/x-icon">
 
@@ -446,8 +446,8 @@ CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<
   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
 </code></pre></div><h2 id="read-more">Read More</h2>
 <ul>
-<li>Confluence 
-  <a href="https://yq.aliyun.com/articles/93801">Httpclient 核心架构设计</a></li>
+<li>
+  <a href="https://yq.aliyun.com/articles/93801">HttpClient 核心架构设计</a></li>
 <li>
   <a href="https://mp.weixin.qq.com/s/e29_LFHFAMcvrZpOJ9y2kw">HttpClient 连接池也能这样用</a></li>
 <li>
@@ -468,9 +468,9 @@ CloseableHttpClient httpClient <span style="color:#f92672">=</span> HttpClients<
 
   <div>
     
-    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/f29460585f95b6926d9ec37ca9308bdd7c729950" title='Last modified by 杨凯彬 | May 11, 2020' target="_blank" rel="noopener">
+    <a class="flex align-center" href="https://github.com/hello-world-example/Apache-Commons/commit/bbda8332b5110c12fdff4925ef5424a420512821" title='Last modified by 杨凯彬 | May 17, 2020' target="_blank" rel="noopener">
       <img src="/Apache-Commons/svg/calendar.svg" class="book-icon" alt="Calendar" />
-      <span>May 11, 2020</span>
+      <span>May 17, 2020</span>
     </a>
   </div>
 

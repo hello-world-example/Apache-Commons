@@ -309,7 +309,7 @@ CloseableHttpClient httpClient = HttpClients.custom()
 
 ## Read More
 
-- Confluence [Httpclient 核心架构设计](https://yq.aliyun.com/articles/93801)
+- [HttpClient 核心架构设计](https://yq.aliyun.com/articles/93801)
 - [HttpClient 连接池也能这样用](https://mp.weixin.qq.com/s/e29_LFHFAMcvrZpOJ9y2kw)
 - [HttpClient 连接池设置引发的一次雪崩](https://mp.weixin.qq.com/s/Bg9Jc7x64j_-sSPhvScQ0g)
 - [Http 持久连接与 HttpClient连接池](https://www.cnblogs.com/kingszelda/p/8988505.html)
