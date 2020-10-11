@@ -33,6 +33,8 @@ if (keepAliveStrategyCopy == null) {
 }
 ```
 
+
+
 ## DefaultClientConnectionReuseStrategy
 
 ```java
@@ -58,12 +60,15 @@ public class DefaultClientConnectionReuseStrategy extends DefaultConnectionReuse
         }
       }
     }
+    
     // DefaultConnectionReuseStrategy 的 复用策略
     return super.keepAlive(response, context);
   }
 
 }
 ```
+
+
 
 ### DefaultConnectionReuseStrategy (httpcore)
 
@@ -156,6 +161,8 @@ public class DefaultConnectionReuseStrategy implements ConnectionReuseStrategy {
 }
 ```
 
+
+
 ## DefaultConnectionKeepAliveStrategy
 
 ```java
@@ -167,6 +174,7 @@ public class DefaultConnectionKeepAliveStrategy implements ConnectionKeepAliveSt
     // Spring Boot 1【无，无限时长】
     // Spring Boot 2【Keep-Alive: timeout=60】
     final HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+
     while (it.hasNext()) {
       final HeaderElement he = it.nextElement();
       // timeout
@@ -182,6 +190,8 @@ public class DefaultConnectionKeepAliveStrategy implements ConnectionKeepAliveSt
   }
 }
 ```
+
+
 
 ## 策略的配合 
 
@@ -210,6 +220,8 @@ if (reuseStrategy.keepAlive(response, context)) {
 // ... 使用之后都会释放连接，根据是否复用来 真实关闭链接 或 放入链接池中
 connHolder.releaseConnection();
 ```
+
+
 
 ### ConnectionHolder.releaseConnection
 
